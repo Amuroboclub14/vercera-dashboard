@@ -25,31 +25,33 @@ import {
 } from "@/components/ui/card";
 import { Icons } from "@/components/ui/icons";
 
+import useCreateUser from "@/utils/useRegister.js";
+
 const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  enrollmentNumber: z
-    .string()
-    .regex(/^[a-zA-Z0-9]+$/, "Invalid enrollment number"),
-  facultyNumber: z.string().regex(/^[a-zA-Z0-9]+$/, "Invalid faculty number"),
-  phoneNumber: z.string().regex(/^\+[1-9]\d{1,14}$/, "Invalid phone number"),
-  department: z.string().min(1, "Enter a valid department name"),
-  branch: z.string().min(1, "Please select a branch"),
-  yearOfStudy: z.string().min(1, "Please select a year of study"),
-  isAMURoboclubMember: z.enum(["yes", "no"], {
-    required_error: "Please select if you're a member of AMURoboclub",
-  }),
+  name: z.string(),
+  email: z.string(),
+  password: z.string(),
+  enrollmentNumber: z.string(),
+  facultyNumber: z.string(),
+  phoneNumber: z.string(),
+  department: z.string(),
+  branch: z.string(),
+  yearOfStudy: z.string(),
+  isAMURoboclubMember: z.enum(["yes", "no"]),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
+
+  const {createUser, username} = useCreateUser();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
@@ -57,16 +59,18 @@ export default function RegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
-
+      console.log(data);
+      await createUser(
+        data.email,
+        data.name,
+        data.password,
+        data.enrollmentNumber,
+        data.facultyNumber,
+        data.department,
+        data.branch,
+        data.yearOfStudy,
+        data.isAMURoboclubMember
+      );
       // Handle successful registration (e.g., redirect to login page)
       console.log("Registration successful");
     } catch (error) {
@@ -185,51 +189,47 @@ export default function RegisterForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="yearOfStudy">Year of Study</Label>
-            <Select
-              onValueChange={(value) =>
-                register("yearOfStudy").onChange({ target: { value } })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select your year of study" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1st Year</SelectItem>
-                <SelectItem value="2">2nd Year</SelectItem>
-                <SelectItem value="3">3rd Year</SelectItem>
-                <SelectItem value="4">4th Year</SelectItem>
-                <SelectItem value="5">5th Year</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.yearOfStudy && (
-              <p className="text-sm text-red-500">
-                {errors.yearOfStudy.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label>Are you a member of AMURoboclub?</Label>
-            <RadioGroup
-              onValueChange={(value) =>
-                register("isAMURoboclubMember").onChange({ target: { value } })
-              }
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="yes" />
-                <Label htmlFor="yes">Yes</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="no" />
-                <Label htmlFor="no">No</Label>
-              </div>
-            </RadioGroup>
-            {errors.isAMURoboclubMember && (
-              <p className="text-sm text-red-500">
-                {errors.isAMURoboclubMember.message}
-              </p>
-            )}
-          </div>
+  <Label htmlFor="yearOfStudy">Year of Study</Label>
+  <Select
+    onValueChange={(value) => setValue("yearOfStudy", value)}
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Select your year of study" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="1">1st Year</SelectItem>
+      <SelectItem value="2">2nd Year</SelectItem>
+      <SelectItem value="3">3rd Year</SelectItem>
+      <SelectItem value="4">4th Year</SelectItem>
+      <SelectItem value="5">5th Year</SelectItem>
+    </SelectContent>
+  </Select>
+  {errors.yearOfStudy && (
+    <p className="text-sm text-red-500">
+      {errors.yearOfStudy.message}
+    </p>
+  )}
+</div>
+<div className="space-y-2">
+  <Label>Are you a member of AMURoboclub?</Label>
+  <RadioGroup
+    onValueChange={(value) => setValue("isAMURoboclubMember", value)}
+  >
+    <div className="flex items-center space-x-2">
+      <RadioGroupItem value="yes" id="yes" />
+      <Label htmlFor="yes">Yes</Label>
+    </div>
+    <div className="flex items-center space-x-2">
+      <RadioGroupItem value="no" id="no" />
+      <Label htmlFor="no">No</Label>
+    </div>
+  </RadioGroup>
+  {errors.isAMURoboclubMember && (
+    <p className="text-sm text-red-500">
+      {errors.isAMURoboclubMember.message}
+    </p>
+  )}
+</div>
         </form>
       </CardContent>
       <CardFooter>
