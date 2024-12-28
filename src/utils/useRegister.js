@@ -7,7 +7,7 @@ export default function useCreateUser(){
     
     const [userName, setUserName] = useState("");
 
-    async function createUser(email, name, password, enrollmentNumber, facultyNumber, department, branch, yearOfStudy, isAMURoboclubMember) {
+    async function createUser(email, name, password, enrollmentNumber, facultyNumber, phoneNumber, department, branch, yearOfStudy, isAMURoboclubMember) {
         try {
             const data = {
                 "name": name,
@@ -17,6 +17,7 @@ export default function useCreateUser(){
                 "passwordConfirm": password,
                 "enrollmentNumber": enrollmentNumber,
                 "facultyNumber": facultyNumber,
+                "phoneNumber": phoneNumber,
                 "department": department,
                 "branch": branch,
                 "yearOfStudy": yearOfStudy,

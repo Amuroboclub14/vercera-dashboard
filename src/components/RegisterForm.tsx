@@ -37,7 +37,7 @@ const registerSchema = z.object({
   department: z.string(),
   branch: z.string(),
   yearOfStudy: z.string(),
-  isAMURoboclubMember: z.enum(["yes", "no"]),
+  isAMURoboclubMember: z.boolean(),
 });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
@@ -66,6 +66,7 @@ export default function RegisterForm() {
         data.password,
         data.enrollmentNumber,
         data.facultyNumber,
+        data.phoneNumber,
         data.department,
         data.branch,
         data.yearOfStudy,
@@ -213,14 +214,14 @@ export default function RegisterForm() {
 <div className="space-y-2">
   <Label>Are you a member of AMURoboclub?</Label>
   <RadioGroup
-    onValueChange={(value) => setValue("isAMURoboclubMember", value)}
+    onValueChange={(value) => setValue("isAMURoboclubMember", value === "true")}
   >
     <div className="flex items-center space-x-2">
-      <RadioGroupItem value="yes" id="yes" />
+      <RadioGroupItem value="true" id="yes" />
       <Label htmlFor="yes">Yes</Label>
     </div>
     <div className="flex items-center space-x-2">
-      <RadioGroupItem value="no" id="no" />
+      <RadioGroupItem value="false" id="no" />
       <Label htmlFor="no">No</Label>
     </div>
   </RadioGroup>
