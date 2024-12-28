@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import TeamManagement from "@/components/TeamManagement";
+import Loader from "./added-components/loader";
 
 type EventDetailsProps = {
   eventId: string;
@@ -77,7 +78,7 @@ export default function EventDetails({ eventId, userId }: EventDetailsProps) {
   };
 
   if (!event) {
-    return <div className="text-white">Loading event details...</div>;
+    return <Loader />;
   }
 
   return (

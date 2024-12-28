@@ -18,6 +18,8 @@ import {
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
 import useLogin from "@/utils/useLogin";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   enrollmentNumber: z
@@ -31,6 +33,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const { handleLogin } = useLogin();
 
@@ -46,16 +49,14 @@ export default function LoginForm() {
     setIsLoading(true);
     console.log(data);
     try {
-      await handleLogin(
-        data.enrollmentNumber,
-        data.password,
-      );
+      await handleLogin(data.enrollmentNumber, data.password);
       // Handle successful login (e.g., redirect to dashboard)
       console.log("Login successful");
     } catch (error) {
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);
+      router.push("/dashboard");
     }
   };
 
