@@ -10,7 +10,7 @@ export default function useCreateUser(){
     async function createUser(email, name, password, enrollmentNumber, facultyNumber, department, branch, yearOfStudy, isAMURoboclubMember) {
         try {
             const data = {
-                "username": name,
+                "name": name,
                 "email": email,
                 "emailVisibility": true,
                 "password": password,
