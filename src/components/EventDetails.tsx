@@ -50,7 +50,7 @@ export default function EventDetails({ eventId, userId }: EventDetailsProps) {
         id: eventId,
         name: "Robotics Challenge",
         description: "Build and program a robot to complete a series of tasks.",
-        imageUrl: "/placeholder.svg?height=400&width=600",
+        imageUrl: "/vercera-logo.png",
         rules: [
           "Teams of up to 4 members",
           "Robots must be autonomous",

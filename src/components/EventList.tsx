@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import useFetchEvents from "@/utils/useFetchEvents.js";
 import Link from "next/link";
 import {
   Card,
@@ -12,56 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-type Event = {
-  id: string;
-  name: string;
-  description: string;
-  date: string;
-  type: string;
-};
-
 export default function EventList() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const { events, loading, error } = useFetchEvents();
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    try {
-      // Replace this with your Pocketbase query
-      // const records = await pb.collection('events').getFullList()
-      // setEvents(records)
-
-      // Placeholder data
-      setEvents([
-        {
-          id: "1",
-          name: "Robotics Challenge",
-          description: "Build and program a robot to complete tasks.",
-          date: "2024-02-15",
-          type: "Competition",
-        },
-        {
-          id: "2",
-          name: "Hackathon",
-          description:
-            "24-hour coding competition to solve real-world problems.",
-          date: "2024-02-16",
-          type: "Competition",
-        },
-        {
-          id: "3",
-          name: "Tech Quiz",
-          description: "Test your knowledge of the latest in technology.",
-          date: "2024-02-17",
-          type: "Quiz",
-        },
-      ]);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
+  if (loading) return <p>Loading events...</p>;
+  if (error) return <p>Error loading events: {error}</p>;
 
   return (
     <div className="flex flex-col space-y-6">
