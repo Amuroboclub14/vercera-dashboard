@@ -17,11 +17,13 @@ import {
 } from "@/components/ui/card";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
+import useLogin from "@/utils/useLogin";
 
 const loginSchema = z.object({
   enrollmentNumber: z
     .string()
-    .regex(/^[a-zA-Z0-9]+$/, "Invalid enrollment number"),
+    .regex(/^[a-zA-Z0-9]+$/, "Invalid enrollment number")
+    .transform((val) => val.toUpperCase()),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -29,6 +31,9 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+
+  const { handleLogin } = useLogin();
+
   const {
     register,
     handleSubmit,
@@ -39,17 +44,12 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    console.log(data);
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
+      await handleLogin(
+        data.enrollmentNumber,
+        data.password,
+      );
       // Handle successful login (e.g., redirect to dashboard)
       console.log("Login successful");
     } catch (error) {
