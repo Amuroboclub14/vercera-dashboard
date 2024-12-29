@@ -4,6 +4,8 @@ import pb from "@/lib/pocketbase"; // Adjust the path to your PocketBase initial
 type Event = {
   id: string;
   name: string;
+  shortDescription: string;
+  image: string;
   description: string;
   date: string;
   time: string;
@@ -25,9 +27,11 @@ export default function useFetchEvents() {
         const formattedEvents = records.map((record) => ({
           id: record.id,
           name: record.name,
+          shortDescription: record.shortDescription,
           description: record.description,
+          image: record.image,
           date: record.date,
-          time: record.date.split(" ")[1].split(".")[0],
+          time: record.date,
         }));
 
         setEvents(formattedEvents);

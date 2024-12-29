@@ -28,11 +28,14 @@ export default function EventPage() {
         {/* Event Image */}
         <div className="relative h-60 w-full overflow-hidden">
           <Image
-            src={event?.image || "/image.JPG"} // Replace with dynamic image URL
+            src={
+              `https://amuroboclub.pockethost.io/api/files/events/${event?.id}/${event?.image}` ||
+              "/image.JPG"
+            } // Replace with dynamic image URL
             alt={event?.name}
             width={1920}
             height={1080}
-            className="object-cover w-full h-full rounded-t-xl"
+            className="object-cover w-full h-full rounded-t-xl object-top"
           />
         </div>
         <CardHeader>
@@ -53,7 +56,14 @@ export default function EventPage() {
           </div>
           <div className="flex items-center space-x-2 text-sm">
             <ClockIcon className="h-4 w-4" />
-            <span>{event?.time}</span>
+            <span>
+              {new Date(event?.time).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+                timeZone: "UTC", // Forces UTC interpretation
+              })}
+            </span>
           </div>
           <div className="flex items-center space-x-2 text-sm">
             <UsersIcon className="h-4 w-4" />
