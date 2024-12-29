@@ -8,8 +8,9 @@ type EventDetail = {
   description: string;
   date: string;
   time: string;
+  image: string;
   teamSize: number;
-  //   location: string;
+  location: string;
 };
 
 export default function useFetchEventDetails(eventId: string | undefined) {
@@ -35,9 +36,10 @@ export default function useFetchEventDetails(eventId: string | undefined) {
           name: data.name,
           description: data.description,
           date: data.date,
-          time: data.date.split(" ")[1].split(".")[0],
+          time: data.date,
+          image: data.image,
           teamSize: data.max_team_members, // Adjust field names to match your API
-          //   location: data.location,
+          location: data.location,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");

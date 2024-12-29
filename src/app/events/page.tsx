@@ -14,6 +14,7 @@ import { CalendarIcon, ClockIcon } from "lucide-react";
 import useFetchEvents from "@/utils/useFetchEvents"; // Adjust path to your hook
 import Loader from "@/components/added-components/loader";
 import ErrorCard from "@/components/added-components/error";
+import Image from "next/image";
 
 export default function EventsPage() {
   const { events, loading, error } = useFetchEvents();
@@ -34,10 +35,17 @@ export default function EventsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <Card key={event.id}>
+            <Card key={event.id} className="flex justify-between flex-col">
+              <Image
+                src={`https://amuroboclub.pockethost.io/api/files/events/${event.id}/${event.image}`}
+                width={1920}
+                height={1080}
+                alt={event.name}
+                className="w-full h-48 object-cover object-top rounded-t-md"
+              />
               <CardHeader>
                 <CardTitle>{event.name}</CardTitle>
-                <CardDescription>{event.description}</CardDescription>
+                <CardDescription>{event.shortDescription}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-2 text-sm">
@@ -53,7 +61,14 @@ export default function EventsPage() {
                 </div>
                 <div className="flex items-center space-x-2 text-sm mt-2">
                   <ClockIcon className="h-4 w-4" />
-                  <span>{event.time}</span>
+                  <span>
+                    {new Date(event?.time).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                      timeZone: "UTC", // Forces UTC interpretation
+                    })}
+                  </span>
                 </div>
               </CardContent>
               <CardFooter>

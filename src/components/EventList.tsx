@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Loader from "./added-components/loader";
 import ErrorCard from "./added-components/error";
+import Image from "next/image";
 
 export default function EventList() {
   const { events, loading, error } = useFetchEvents();
@@ -31,6 +32,13 @@ export default function EventList() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
           <Card key={event.id} className="flex flex-col">
+            <Image
+              src={`https://amuroboclub.pockethost.io/api/files/events/${event.id}/${event.image}`}
+              width={1920}
+              height={1080}
+              alt={event.name}
+              className="w-full h-48 object-cover object-top rounded-t-md"
+            />
             <CardHeader>
               <div className="space-y-1">
                 <CardTitle className="text-xl">{event.name}</CardTitle>
