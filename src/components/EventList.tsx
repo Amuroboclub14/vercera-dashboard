@@ -1,6 +1,6 @@
 "use client";
 
-import useFetchEvents from "@/utils/useFetchEvents.js";
+import useFetchEvents from "@/utils/useFetchEvents";
 import Link from "next/link";
 import {
   Card,
@@ -11,12 +11,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Loader from "./added-components/loader";
+import ErrorCard from "./added-components/error";
 
 export default function EventList() {
   const { events, loading, error } = useFetchEvents();
 
-  if (loading) return <p>Loading events...</p>;
-  if (error) return <p>Error loading events: {error}</p>;
+  if (loading) return <Loader />;
+  if (error) return <ErrorCard />;
 
   return (
     <div className="flex flex-col space-y-6">

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { UserProvider } from '../utils/UserContext';
+import Layout from "@/components/Layout";
+import { UserProvider } from "@/utils/UserContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,11 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-         <UserProvider>
-          {children}
+      <body className={inter.className}>
+        <UserProvider>
+          <Layout>{children}</Layout>
         </UserProvider>
       </body>
     </html>
