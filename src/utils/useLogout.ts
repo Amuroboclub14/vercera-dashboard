@@ -1,10 +1,9 @@
 import pb from "../lib/pocketbase.js";
 
-export default function useLogout(): () => void { 
+export default function useLogout(): () => void {
+  function logout(): void {
+    pb.authStore.clear();
+  }
 
-    function logout(): void {
-        pb.authStore.clear();
-    }
-
-    return logout;
+  return logout;
 }

@@ -27,7 +27,7 @@ type UserData = {
   email: string;
   enrollmentNumber: string;
   facultyNumber: string;
-  phoneNo: string;
+  phoneNumber: string;
   branch: string;
   yearOfStudy: string;
   isAMURoboclubMember: boolean;
@@ -36,48 +36,16 @@ type UserData = {
 export default function UserProfile({ userId }: UserProfileProps) {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const {loggedinUser, userInfo, updateLoggedinUser} = useContext(UserContext);
+  const { loggedinUser, userInfo, updateLoggedinUser } =
+    useContext(UserContext);
   const logout = useLogout();
   const router = useRouter();
   console.log(loggedinUser);
 
-<<<<<<< Updated upstream
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const { name, value } = e.target;
   //   setUserData((prev) => (prev ? { ...prev, [name]: value } : null));
   // };
-=======
-  useEffect(() => {
-    fetchUserData();
-  }, [userId]);
-
-  const fetchUserData = async () => {
-    try {
-      // Replace this with your Pocketbase query
-      // const record = await pb.collection('users').getOne(userId)
-      // setUserData(record)
-
-      // Placeholder data
-      setUserData({
-        name: "John Doe",
-        email: "john.doe@example.com",
-        enrollmentNumber: "EN123456",
-        facultyNumber: "FN789012",
-        phoneNo: "+1234567890",
-        branch: "Computer Science",
-        yearOfStudy: "3",
-        isAMURoboclubMember: true,
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUserData((prev) => (prev ? { ...prev, [name]: value } : null));
-  };
->>>>>>> Stashed changes
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +83,7 @@ export default function UserProfile({ userId }: UserProfileProps) {
           </CardDescription>
         </CardHeader>
         {loggedinUser ? (
-            <div className="mt-4 my-5 pl-5">
+          <div className="mt-4 my-5 pl-5">
             <div className="flex items-center">
               <p className="font-semibold w-1/3">Name:</p>
               <p className="w-2/3">{userInfo.name}</p>
@@ -150,12 +118,14 @@ export default function UserProfile({ userId }: UserProfileProps) {
             </div>
             <div className="flex items-center">
               <p className="font-semibold w-1/3">AMURoboclub Member:</p>
-              <p className="w-2/3">{userInfo.isAMURoboclubMember ? 'Yes' : 'No'}</p>
+              <p className="w-2/3">
+                {userInfo.isAMURoboclubMember ? "Yes" : "No"}
+              </p>
             </div>
           </div>
-          ) : (
-            <p>Loading user information...</p>
-          )}
+        ) : (
+          <p>Loading user information...</p>
+        )}
         <CardContent>
           {/* <form onSubmit={handleSubmit} className="space-y-4">
             {Object.entries(userData).map(([key, value]) => (

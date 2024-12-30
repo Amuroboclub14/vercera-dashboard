@@ -21,20 +21,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <UserProvider>
-<<<<<<< Updated upstream
-          <Layout>
-            {children}
-          </Layout>
-=======
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Layout>{children}</Layout>
-          </ThemeProvider>
->>>>>>> Stashed changes
+          <Layout>{children}</Layout>
         </UserProvider>
       </body>
     </html>

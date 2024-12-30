@@ -12,19 +12,23 @@ const useLogin = (): UseLoginReturn => {
   const [login, setLogin] = useState<boolean>(pb.authStore.isValid);
   const { setLoggedinUser, setUserInfo } = useContext(UserContext);
 
-  const handleLogin = useCallback(async (enrollmentNumber: string, password: string) => {
-    try {
-      const authData = await pb.collection('users').authWithPassword(enrollmentNumber, password);
-      if (authData) {
-        setLogin(pb.authStore.isValid);
-        setLoggedinUser(pb.authStore.record.name);
-        setUserInfo(pb.authStore.record);
-        
+  const handleLogin = useCallback(
+    async (enrollmentNumber: string, password: string) => {
+      try {
+        const authData = await pb
+          .collection("users")
+          .authWithPassword(enrollmentNumber, password);
+        if (authData) {
+          setLogin(pb.authStore.isValid);
+          setLoggedinUser(pb.authStore.record.name);
+          setUserInfo(pb.authStore.record);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [setLoggedinUser]);
+    },
+    [setLoggedinUser]
+  );
 
   return {
     login,
