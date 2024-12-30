@@ -7,18 +7,20 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
-const menuItems = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Events", href: "/events" },
-  { label: "Registered", href: "/registered-events" },
-  { label: "Profile Settings", href: "/settings" },
-];
+import UserContext from "@/utils/UserContext";
+import { useContext } from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-
+  const {loggedinUser} = useContext(UserContext);
+  const menuItems = [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Events", href: "/events" },
+    { label: "Registered", href: "/registered-events" },
+    { label: "Profile Settings", href: "/settings" },
+    { label: loggedinUser ? loggedinUser : "Login", href: loggedinUser ? "/profile" : "/login" },
+  ];
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">

@@ -10,9 +10,9 @@ export const UserProvider = ({ children }) => {
   const [ userInfo, setUserInfo ] = useState(null);
 
   const updateLoggedinUser = () => {
-    if (pb.authStore.model) {
-      setLoggedinUser(pb.authStore.model.username);
-      setUserInfo(pb.authStore.model);
+    if (pb.authStore.record) {
+      setLoggedinUser(pb.authStore.record.name);
+      setUserInfo(pb.authStore.record);
     } else {
       setLoggedinUser('');
       setUserInfo();
@@ -20,11 +20,11 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(()=>{
-    // updateLoggedinUser();
+    updateLoggedinUser();
   },[])
 
   return (
-    <UserContext.Provider value={{ loggedinUser, userInfo, setLoggedinUser, updateLoggedinUser }}>
+    <UserContext.Provider value={{ loggedinUser, userInfo, setUserInfo, setLoggedinUser, updateLoggedinUser }}>
       {children}
     </UserContext.Provider>
   );

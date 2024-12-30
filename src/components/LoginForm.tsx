@@ -35,7 +35,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const { handleLogin } = useLogin();
+  const { handleLogin, login } = useLogin();
+ 
 
   const {
     register,
@@ -56,7 +57,7 @@ export default function LoginForm() {
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);
-      router.push("/dashboard");
+      router.push('/dashboard');
     }
   };
 
