@@ -27,7 +27,7 @@ type UserData = {
   email: string;
   enrollmentNumber: string;
   facultyNumber: string;
-  phoneNumber: string;
+  phoneNo: string;
   branch: string;
   yearOfStudy: string;
   isAMURoboclubMember: boolean;
@@ -41,10 +41,43 @@ export default function UserProfile({ userId }: UserProfileProps) {
   const router = useRouter();
   console.log(loggedinUser);
 
+<<<<<<< Updated upstream
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const { name, value } = e.target;
   //   setUserData((prev) => (prev ? { ...prev, [name]: value } : null));
   // };
+=======
+  useEffect(() => {
+    fetchUserData();
+  }, [userId]);
+
+  const fetchUserData = async () => {
+    try {
+      // Replace this with your Pocketbase query
+      // const record = await pb.collection('users').getOne(userId)
+      // setUserData(record)
+
+      // Placeholder data
+      setUserData({
+        name: "John Doe",
+        email: "john.doe@example.com",
+        enrollmentNumber: "EN123456",
+        facultyNumber: "FN789012",
+        phoneNo: "+1234567890",
+        branch: "Computer Science",
+        yearOfStudy: "3",
+        isAMURoboclubMember: true,
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prev) => (prev ? { ...prev, [name]: value } : null));
+  };
+>>>>>>> Stashed changes
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -10,9 +10,9 @@ export default function useCreateUser() {
     password,
     enrollmentNumber,
     facultyNumber,
-    phoneNumber,
+    phoneNo,
+    course,
     department,
-    branch,
     yearOfStudy,
     isAMURoboclubMember
   ) {
@@ -25,9 +25,9 @@ export default function useCreateUser() {
         passwordConfirm: password,
         enrollmentNumber: enrollmentNumber,
         facultyNumber: facultyNumber,
-        phoneNumber: phoneNumber,
+        phoneNo: phoneNo,
+        course: course,
         department: department,
-        branch: branch,
         yearOfStudy: yearOfStudy,
         isAMURoboclubMember: isAMURoboclubMember,
       };

@@ -18,7 +18,6 @@ import {
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
 import useLogin from "@/utils/useLogin";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({

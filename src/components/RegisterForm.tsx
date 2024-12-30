@@ -33,9 +33,9 @@ const registerSchema = z.object({
   password: z.string(),
   enrollmentNumber: z.string(),
   facultyNumber: z.string(),
-  phoneNumber: z.string(),
+  phoneNo: z.string(),
+  course: z.string(),
   department: z.string(),
-  branch: z.string(),
   yearOfStudy: z.string(),
   isAMURoboclubMember: z.boolean(),
 });
@@ -45,13 +45,13 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const {createUser, username} = useCreateUser();
+  const { createUser, username } = useCreateUser();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
@@ -66,9 +66,9 @@ export default function RegisterForm() {
         data.password,
         data.enrollmentNumber,
         data.facultyNumber,
-        data.phoneNumber,
+        data.phoneNo,
+        data.course,
         data.department,
-        data.branch,
         data.yearOfStudy,
         data.isAMURoboclubMember
       );
@@ -144,7 +144,7 @@ export default function RegisterForm() {
             <Input
               id="facultyNumber"
               {...register("facultyNumber")}
-              placeholder="e.g., F1234"
+              placeholder="e.g., 20ABC123"
             />
             {errors.facultyNumber && (
               <p className="text-sm text-red-500">
@@ -153,16 +153,25 @@ export default function RegisterForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber">Phone Number</Label>
+            <Label htmlFor="phoneNo">Phone Number</Label>
             <Input
-              id="phoneNumber"
-              {...register("phoneNumber")}
+              id="phoneNo"
+              {...register("phoneNo")}
               placeholder="+91 1234567890"
             />
-            {errors.phoneNumber && (
-              <p className="text-sm text-red-500">
-                {errors.phoneNumber.message}
-              </p>
+            {errors.phoneNo && (
+              <p className="text-sm text-red-500">{errors.phoneNo.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="course">Course</Label>
+            <Input
+              id="course"
+              {...register("course")}
+              placeholder="e.g., B.Tech/B.Sc"
+            />
+            {errors.course && (
+              <p className="text-sm text-red-500">{errors.course.message}</p>
             )}
           </div>
           <div className="space-y-2">
@@ -170,7 +179,7 @@ export default function RegisterForm() {
             <Input
               id="department"
               {...register("department")}
-              placeholder="Your department"
+              placeholder="e.g., Computer Engineering/Electrical Engineering"
             />
             {errors.department && (
               <p className="text-sm text-red-500">
@@ -179,58 +188,47 @@ export default function RegisterForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="branch">Branch</Label>
-            <Input
-              id="branch"
-              {...register("branch")}
-              placeholder="Your branch"
-            />
-            {errors.branch && (
-              <p className="text-sm text-red-500">{errors.branch.message}</p>
+            <Label htmlFor="yearOfStudy">Year of Study</Label>
+            <Select onValueChange={(value) => setValue("yearOfStudy", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select your year of study" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1st Year</SelectItem>
+                <SelectItem value="2">2nd Year</SelectItem>
+                <SelectItem value="3">3rd Year</SelectItem>
+                <SelectItem value="4">4th Year</SelectItem>
+                <SelectItem value="5">5th Year</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.yearOfStudy && (
+              <p className="text-sm text-red-500">
+                {errors.yearOfStudy.message}
+              </p>
             )}
           </div>
           <div className="space-y-2">
-  <Label htmlFor="yearOfStudy">Year of Study</Label>
-  <Select
-    onValueChange={(value) => setValue("yearOfStudy", value)}
-  >
-    <SelectTrigger>
-      <SelectValue placeholder="Select your year of study" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="1">1st Year</SelectItem>
-      <SelectItem value="2">2nd Year</SelectItem>
-      <SelectItem value="3">3rd Year</SelectItem>
-      <SelectItem value="4">4th Year</SelectItem>
-      <SelectItem value="5">5th Year</SelectItem>
-    </SelectContent>
-  </Select>
-  {errors.yearOfStudy && (
-    <p className="text-sm text-red-500">
-      {errors.yearOfStudy.message}
-    </p>
-  )}
-</div>
-<div className="space-y-2">
-  <Label>Are you a member of AMURoboclub?</Label>
-  <RadioGroup
-    onValueChange={(value) => setValue("isAMURoboclubMember", value === "true")}
-  >
-    <div className="flex items-center space-x-2">
-      <RadioGroupItem value="true" id="yes" />
-      <Label htmlFor="yes">Yes</Label>
-    </div>
-    <div className="flex items-center space-x-2">
-      <RadioGroupItem value="false" id="no" />
-      <Label htmlFor="no">No</Label>
-    </div>
-  </RadioGroup>
-  {errors.isAMURoboclubMember && (
-    <p className="text-sm text-red-500">
-      {errors.isAMURoboclubMember.message}
-    </p>
-  )}
-</div>
+            <Label>Are you a member of AMURoboclub?</Label>
+            <RadioGroup
+              onValueChange={(value) =>
+                setValue("isAMURoboclubMember", value === "true")
+              }
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="true" id="yes" />
+                <Label htmlFor="yes">Yes</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="false" id="no" />
+                <Label htmlFor="no">No</Label>
+              </div>
+            </RadioGroup>
+            {errors.isAMURoboclubMember && (
+              <p className="text-sm text-red-500">
+                {errors.isAMURoboclubMember.message}
+              </p>
+            )}
+          </div>
         </form>
       </CardContent>
       <CardFooter>

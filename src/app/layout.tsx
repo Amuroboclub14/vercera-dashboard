@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 import Layout from "@/components/Layout";
 import { UserProvider } from "@/utils/UserContext";
 
@@ -17,12 +18,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <UserProvider>
+<<<<<<< Updated upstream
           <Layout>
             {children}
           </Layout>
+=======
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Layout>{children}</Layout>
+          </ThemeProvider>
+>>>>>>> Stashed changes
         </UserProvider>
       </body>
     </html>
