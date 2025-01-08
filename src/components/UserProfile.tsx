@@ -36,7 +36,7 @@ type UserData = {
 export default function UserProfile({ userId }: UserProfileProps) {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { loggedinUser, userInfo, updateLoggedinUser } =
+  const { loggedinUser, userInfo, updateLoggedinUser } = 
     useContext(UserContext);
   const logout = useLogout();
   const router = useRouter();
