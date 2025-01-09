@@ -15,13 +15,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const { loggedinUser } = useContext(UserContext);
   const menuItems = [
-    { label: "Dashboard", href: "/dashboard" },
+    // { label: "Dashboard", href: "/dashboard" },
     { label: "Events", href: "/events" },
     { label: "Registered", href: "/registered-events" },
     { label: "Profile Settings", href: "/settings" },
     {
-      label: loggedinUser ? loggedinUser : "Login",
-      href: loggedinUser ? "/profile" : "/login",
+      label: loggedinUser ? loggedinUser : "Signup",
+      href: loggedinUser ? "/profile" : "/register",
     },
   ];
   return (
