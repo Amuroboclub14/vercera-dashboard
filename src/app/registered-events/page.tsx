@@ -1,6 +1,4 @@
 "use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Card,
@@ -12,53 +10,29 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, ClockIcon } from "lucide-react";
+import useFetchRegisteredEvents from "@/utils/useFetchRegisteredEvents";
+
 
 type RegisteredEvent = {
   id: string;
-  name: string;
-  description: string;
-  date: string;
-  time: string;
+  user: Array<string>;
+  event: Array<string>;
+  registration_id: string;
+  created: Date;
+  updated: Date;
+  expand: {
+    event: {
+      id: string;
+      name: string;
+      description: string;
+      date: string;
+    };
+  }[];
 };
 
 export default function RegisteredEventsPage() {
-  const [events, setEvents] = useState<RegisteredEvent[]>([]);
-
-  useEffect(() => {
-    fetchRegisteredEvents();
-  }, []);
-
-  const fetchRegisteredEvents = async () => {
-    try {
-      // Replace this with your Pocketbase query
-      // const records = await pb.collection('registrations').getFullList({
-      //   filter: `user="${userId}"`,
-      //   expand: 'event'
-      // })
-      // setEvents(records.map(r => r.expand.event))
-
-      // Placeholder data
-      setEvents([
-        {
-          id: "1",
-          name: "Robotics Challenge",
-          description: "Build and program a robot to complete tasks.",
-          date: "2024-02-15",
-          time: "10:00 AM",
-        },
-        {
-          id: "2",
-          name: "Hackathon",
-          description:
-            "24-hour coding competition to solve real-world problems.",
-          date: "2024-02-16",
-          time: "9:00 AM",
-        },
-      ]);
-    } catch (error) {
-      console.error("Error fetching registered events:", error);
-    }
-  };
+  const { events, loading, error }: { events: RegisteredEvent[]; loading: boolean; error: any } = useFetchRegisteredEvents();
+  
 
   return (
     <div className="space-y-6">
@@ -69,17 +43,18 @@ export default function RegisteredEventsPage() {
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {events.map((event) => (
-          <Card key={event.id}>
+        {events.map((e) => (
+          <Card key={e.id}>
             <CardHeader>
-              <CardTitle>{event.name}</CardTitle>
-              <CardDescription>{event.description}</CardDescription>
+              <CardTitle>{e.expand.event.name}</CardTitle>
+              <CardTitle>#{e.registration_id}</CardTitle>
+              <CardDescription>{e.expand.event.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center space-x-2 text-sm">
                 <CalendarIcon className="h-4 w-4" />
                 <span>
-                  {new Date(event.date).toLocaleDateString("en-US", {
+                  {new Date(e.expand.event.date).toLocaleDateString("en-US", {
                     weekday: "long",
                     year: "numeric",
                     month: "long",
@@ -87,13 +62,13 @@ export default function RegisteredEventsPage() {
                   })}
                 </span>
               </div>
-              <div className="flex items-center space-x-2 text-sm mt-2">
+              {/* <div className="flex items-center space-x-2 text-sm mt-2">
                 <ClockIcon className="h-4 w-4" />
-                <span>{event.time}</span>
-              </div>
+                <span>{e.expand.event.time}</span>
+              </div> */}
             </CardContent>
             <CardFooter>
-              <Link href={`/events/${event.id}`} passHref>
+              <Link href={`/events/${e.expand.event.id}`} passHref>
                 <Button variant="outline" className="w-full">
                   View Details
                 </Button>

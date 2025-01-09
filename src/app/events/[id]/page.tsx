@@ -14,11 +14,14 @@ import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
 import Loader from "@/components/added-components/loader";
 import useFetchEventDetails from "@/utils/useFetchEventDetails"; // Import the custom hook
 import Image from "next/image";
+import { Icons } from "@/components/ui/icons";
+import useEventRegister from "@/utils/useEventRegister";
 
 export default function EventPage() {
   const params = useParams();
   const { event, loading, error } = useFetchEventDetails(params.id);
-
+  const { handleEventRegistration, registrationLoading, registrationError } = useEventRegister();
+  
   if (loading) return <Loader />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
@@ -73,8 +76,17 @@ export default function EventPage() {
             <strong>Location:</strong> {event?.location}
           </div>
         </CardContent>
+        {registrationError && <div className="text-center text-red-500 text-sm mb-2">{registrationError}</div>}
         <CardFooter>
-          <Button className="w-full">Register for Event</Button>
+          <Button
+            className="w-full"
+            onClick={() => handleEventRegistration(event?.id)}
+            >
+            {registrationLoading && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Register for Event
+          </Button>
         </CardFooter>
       </Card>
     </div>
