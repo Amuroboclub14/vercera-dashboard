@@ -9,6 +9,7 @@ export default function useFetchEvents() {
   const { userInfo } = useContext(UserContext);
 
   const handleEventRegistration = async (eventId: string) => {
+    console.log(eventId);
     const data = {
       user: userInfo?.id,
       event: eventId,
@@ -17,17 +18,16 @@ export default function useFetchEvents() {
     try {
       const existingRegistration = await pb
         .collection("event_registrations")
-        .getFirstListItem(`user="${userInfo?.id}" && event="${eventId}"`);
-
-      if (existingRegistration) {
+        .getFullList({filter: `user="${userInfo?.id}" && event="${eventId}"`});
+      console.log(existingRegistration);
+      if (existingRegistration.length > 0) {
         setRegistrationError("You have already registered for this event.");
         return;
       }
-      const record = await pb.collection("event_registrations").create(data);
+      await pb.collection("event_registrations").create(data);
     } catch (e) {
       setRegistrationError(e.message);
     } finally {
-        console.log(registrationError)
       setRegistrationLoading(false);
     }
   };
