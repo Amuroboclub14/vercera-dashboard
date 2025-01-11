@@ -44,7 +44,7 @@ export default function EventsPage() {
                 className="w-full h-48 object-cover object-top rounded-t-md"
               />
               <CardHeader>
-                <CardTitle>{event.name}</CardTitle>
+                <CardTitle className="text-xl">{event.name}</CardTitle>
                 <CardDescription>{event.shortDescription}</CardDescription>
               </CardHeader>
               <CardContent>

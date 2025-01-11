@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import useFetchRegisteredEvents from "@/utils/useFetchRegisteredEvents";
 
-
 type RegisteredEvent = {
   id: string;
   user: Array<string>;
@@ -31,8 +30,12 @@ type RegisteredEvent = {
 };
 
 export default function RegisteredEventsPage() {
-  const { events, loading, error }: { events: RegisteredEvent[]; loading: boolean; error: any } = useFetchRegisteredEvents();
-  
+  const {
+    events,
+    loading,
+    error,
+  }: { events: RegisteredEvent[]; loading: boolean; error: any } =
+    useFetchRegisteredEvents();
 
   return (
     <div className="space-y-6">
@@ -46,9 +49,14 @@ export default function RegisteredEventsPage() {
         {events.map((e) => (
           <Card key={e.id}>
             <CardHeader>
-              <CardTitle>{e.expand.event.name}</CardTitle>
-              <CardTitle>#{e.registration_id}</CardTitle>
-              <CardDescription>{e.expand.event.description}</CardDescription>
+              <CardTitle className="text-xl">{e.expand.event.name}</CardTitle>
+              <CardDescription className="font-semibold">
+                {" "}
+                Team ID: {e.registration_id}
+              </CardDescription>
+              <CardDescription>
+                {e.expand.event.shortDescription}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center space-x-2 text-sm">

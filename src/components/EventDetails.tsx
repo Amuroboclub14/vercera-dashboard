@@ -99,7 +99,10 @@ export default function EventDetails({ eventId, userId }: EventDetailsProps) {
             height={400}
             className="rounded-lg mb-4 object-cover"
           />
-          <CardDescription className="text-purple-200 text-lg">
+          <CardDescription
+            className="text-purple-200 text-lg"
+            dangerouslySetInnerHTML={{ __html: event.description }}
+          >
             {event.description}
           </CardDescription>
           <div className="space-y-4">
