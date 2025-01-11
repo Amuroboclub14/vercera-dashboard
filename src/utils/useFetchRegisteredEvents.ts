@@ -24,14 +24,11 @@ export default function useFetchRegisteredEvents() {
       try {
         pb.autoCancellation(false);
         const records = await pb.collection("event_registrations").getFullList(500, {
+          filter: `user="${userInfo?.id}"`,
           sort: "-created",
           expand: 'user, event'
         });
 
-        const filterEvents = (records: RegisterdEvents[], userId: string): RegisterdEvents[] => {
-            return records.filter((record) => record.user === userId);
-        }
-        filterEvents(records, userInfo?.id);
         const formattedEvents = records.map((record) => ({
           id: record.id,
           user: record.user,
@@ -41,7 +38,7 @@ export default function useFetchRegisteredEvents() {
           created: record.created,
           updated: record.updated,
         }));
-        console.log(formattedEvents);
+        
         setEvents(formattedEvents);
       } catch (err: any) {
         console.error("Error fetching events:", err);
