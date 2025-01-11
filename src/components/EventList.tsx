@@ -14,6 +14,7 @@ import { ArrowRight } from "lucide-react";
 import Loader from "./added-components/loader";
 import ErrorCard from "./added-components/error";
 import Image from "next/image";
+import { CalendarIcon, ClockIcon } from "lucide-react";
 
 export default function EventList() {
   const { events, loading, error } = useFetchEvents();
@@ -31,7 +32,7 @@ export default function EventList() {
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => (
-          <Card key={event.id} className="flex flex-col">
+          <Card key={event.id} className="flex flex-col justify-between">
             <Image
               src={`https://amuroboclub.pockethost.io/api/files/events/${event.id}/${event.image}`}
               width={1920}
@@ -45,17 +46,34 @@ export default function EventList() {
                 <CardDescription>{event.type}</CardDescription>
               </div>
             </CardHeader>
-            <CardContent className="flex-1">
-              <div className="space-y-4">
+            <CardContent className="flex-1 flex flex-col justify-between">
+              <div>
                 <p className="text-sm text-muted-foreground">
-                  {event.description}
+                  {event.shortDescription}
                 </p>
-                <div className="text-sm text-muted-foreground">
-                  {new Date(event.date).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+              </div>
+              <div className="space-y-2 mt-auto pt-4">
+                <div className="flex items-center space-x-2 text-sm">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span>
+                    {new Date(event?.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <ClockIcon className="h-4 w-4" />
+                  <span>
+                    {new Date(event?.time).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                      timeZone: "UTC", // Forces UTC interpretation
+                    })}
+                  </span>
                 </div>
               </div>
             </CardContent>

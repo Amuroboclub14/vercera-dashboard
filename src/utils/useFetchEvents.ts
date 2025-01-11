@@ -21,14 +21,15 @@ export default function useFetchEvents() {
       try {
         pb.autoCancellation(false);
         const records = await pb.collection("events").getFullList(500, {
-          sort: "-created",
+          sort: "+date",
         });
 
         const formattedEvents = records.map((record) => ({
           id: record.id,
           name: record.name,
           shortDescription: record.shortDescription,
-          description: record.description,
+          // description: record.description,
+          description: record.description.replace(/\n/g, "<br />"),
           image: record.image,
           date: record.date,
           time: record.date,

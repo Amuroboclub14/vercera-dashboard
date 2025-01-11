@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -27,6 +26,8 @@ import { toast } from "@/hooks/use-toast";
 import { useContext } from "react";
 import UserContext from "@/utils/UserContext";
 import pb from "@/lib/pocketbase";
+import { useRouter } from "next/navigation";
+import useLogout from "@/utils/useLogout";
 
 const profileFormSchema = z.object({
   name: z
@@ -54,8 +55,12 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const { loggedinUser, userInfo } = useContext(UserContext);
-  
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { loggedinUser, userInfo, updateLoggedinUser } =
+    useContext(UserContext);
+  const logout = useLogout();
+  const router = useRouter();
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -69,7 +74,12 @@ export function ProfileForm() {
     },
     mode: "onChange",
   });
-  
+
+  const handleLogout = () => {
+    logout();
+    updateLoggedinUser();
+    router.push("/dashboard");
+  };
 
   useEffect(() => {
     if (userInfo) {
@@ -90,7 +100,7 @@ export function ProfileForm() {
     console.log("Submitting form...");
     const formData = form.getValues(); // Get all form values at once
     const updatedData: Partial<ProfileFormValues> = {};
-  
+
     if (formData.name !== userInfo.name) {
       updatedData.name = formData.name;
     }
@@ -131,7 +141,7 @@ export function ProfileForm() {
   }
 
   return (
-    <Form {...form} >
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -216,7 +226,7 @@ export function ProfileForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course</FormLabel>
-              <Select onValueChange={field.onChange} >
+              <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select your course" />
@@ -264,9 +274,19 @@ export function ProfileForm() {
             </FormItem>
           )}
         /> */}
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Updating..." : "Update profile"}
-        </Button>
+        <div className="space-x-4">
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update profile"}
+          </Button>
+          <Button
+            type="submit"
+            disabled={isLoggingOut}
+            variant={"destructive"}
+            onClick={handleLogout}
+          >
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

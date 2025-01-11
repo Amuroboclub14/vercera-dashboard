@@ -20,8 +20,9 @@ import useEventRegister from "@/utils/useEventRegister";
 export default function EventPage() {
   const params = useParams();
   const { event, loading, error } = useFetchEventDetails(params.id);
-  const { handleEventRegistration, registrationLoading, registrationError } = useEventRegister();
-  
+  const { handleEventRegistration, registrationLoading, registrationError } =
+    useEventRegister();
+
   if (loading) return <Loader />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
@@ -43,7 +44,12 @@ export default function EventPage() {
         </div>
         <CardHeader>
           <CardTitle className="text-3xl mt-4">{event?.name}</CardTitle>
-          <CardDescription>{event?.description}</CardDescription>
+          {/* <CardDescription>{event?.description}</CardDescription> */}
+          <CardDescription>
+            <pre className="whitespace-pre-wrap font-sans">
+              {event?.description}
+            </pre>
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2 text-sm">
@@ -76,12 +82,16 @@ export default function EventPage() {
             <strong>Location:</strong> {event?.location}
           </div>
         </CardContent>
-        {registrationError && <div className="text-center text-red-500 text-sm mb-2">{registrationError}</div>}
+        {registrationError && (
+          <div className="text-center text-red-500 text-sm mb-2">
+            {registrationError}
+          </div>
+        )}
         <CardFooter>
           <Button
             className="w-full"
             onClick={() => handleEventRegistration(event?.id)}
-            >
+          >
             {registrationLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
