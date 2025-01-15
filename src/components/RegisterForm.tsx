@@ -26,6 +26,7 @@ import {
 import { Icons } from "@/components/ui/icons";
 
 import useCreateUser from "@/utils/useRegister.js";
+import Link from "next/link";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -239,7 +240,7 @@ export default function RegisterForm() {
             </div>
           </form>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col space-y-4">
           <Button
             className="w-full"
             type="submit"
@@ -251,6 +252,12 @@ export default function RegisterForm() {
             )}
             Register
           </Button>
+          <p className="text-sm text-center text-gray-600">
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-600 hover:underline">
+              Login here
+            </Link>
+          </p>
         </CardFooter>
       </Card>
     </>

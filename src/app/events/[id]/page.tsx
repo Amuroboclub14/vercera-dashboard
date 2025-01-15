@@ -91,6 +91,7 @@ export default function EventPage() {
           <Button
             className="w-full"
             onClick={() => handleEventRegistration(event?.id)}
+            disabled
           >
             {registrationLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

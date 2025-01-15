@@ -7,6 +7,7 @@ interface PaymentDetails {
   amount: number;
   verceraId: string | null;
   qrCode: string | null;
+  paymentScreenshot: string | null;
 }
 
 const useFetchPaymentStatus = () => {
@@ -31,6 +32,7 @@ const useFetchPaymentStatus = () => {
         amount: record.isAMURoboclubMember ? 100 : 250,
         verceraId: record.verceraId || null,
         qrCode: record.qrCode || null,
+        paymentScreenshot: record.paymentScreenshot || null,
       });
     } catch (error) {
       console.error("Error fetching payment status:", error);

@@ -78,7 +78,7 @@ export function ProfileForm() {
   const handleLogout = () => {
     logout();
     updateLoggedinUser();
-    router.push("/dashboard");
+    router.push("/");
   };
 
   useEffect(() => {
@@ -174,26 +174,6 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name="bio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bio</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Tell us a little bit about yourself"
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                You can @mention other users and organizations.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
           name="enrollmentNumber"
@@ -226,6 +206,19 @@ export function ProfileForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Course</FormLabel>
+              <FormControl>
+                <Input placeholder="Computer Engineering" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* <FormField
+          control={form.control}
+          name="course"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Course</FormLabel>
               <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
@@ -242,32 +235,6 @@ export function ProfileForm() {
                   </SelectItem>
                   <SelectItem value="civil">Civil Engineering</SelectItem>
                   <SelectItem value="chemical">Chemical Engineering</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* <FormField
-          control={form.control}
-          name="yearOfStudy"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Year of Study</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(Number(value))}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your year" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value={1}>First Year</SelectItem>
-                  <SelectItem value={2}>Second Year</SelectItem>
-                  <SelectItem value={3}>Third Year</SelectItem>
-                  <SelectItem value={4}>Fourth Year</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
