@@ -14,16 +14,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const { loggedinUser } = useContext(UserContext);
+
   const menuItems = [
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Events", href: "/events" },
-    { label: "Registered", href: "/registered-events" },
-    // { label: "Profile Settings", href: "/settings" },
+    { label: "Dashboard", href: "/" },
+    loggedinUser
+      ? { label: "Registered Events", href: "/registered-events" }
+      : null,
     {
       label: loggedinUser ? loggedinUser : "Login",
       href: loggedinUser ? "/profile" : "/login",
     },
-  ];
+    loggedinUser
+      ? null
+      : { label: "Register for Vercera 4.0", href: "/register" },
+  ].filter(Boolean);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background">
@@ -31,12 +36,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/vercera-logo.png"
+                src="/vercera-logo-wide.png"
                 alt="Vercera Logo"
-                width={32}
+                width={150}
                 height={32}
               />
-              <span className="font-bold text-xl">Vercera 4.0</span>
             </Link>
           </div>
           <nav className="hidden md:flex items-center space-x-6">

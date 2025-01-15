@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import PaymentStatus from "@/components/PaymentStatus";
 import EventList from "@/components/EventList";
+import Image from "next/image";
 
 export default function DashboardPage() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -23,11 +24,14 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col space-y-8">
-      <div className="flex flex-col space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome to Vercera 4.0. Manage your events and registrations.
-        </p>
+      <div className="relative w-full h-64 sm:h-80 lg:h-96">
+        <Image
+          src="/vercera-logo-wide.png" // Update this path to your image
+          alt="Vercera-Banner"
+          layout="fill"
+          objectFit="cover"
+          priority // Ensures the image is loaded quickly
+        />
       </div>
       <PaymentStatus userId={userId} />
       <EventList />
