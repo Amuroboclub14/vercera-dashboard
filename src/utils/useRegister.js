@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import pb from "../lib/pocketbase.js";
 import QRCode from "qrcode";
+import UserContext from "../utils/UserContext.jsx";
+
 
 export default function useCreateUser() {
-  const [userName, setUserName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const {setLoggedinUser} = useContext(UserContext);
 
   // Function to generate unique VarceraId
   const generateVerceraId = (enrollmentNumber) => {
@@ -70,11 +73,9 @@ export default function useCreateUser() {
         .authWithPassword(email, password);
 
       if (authData) {
-        console.log(pb.authStore.model.username);
-        setUserName(pb.authStore.model.username);
+        setLoggedinUser(pb.authStore.record.username);
       }
 
-      console.log("User created successfully with VerceraId:", verceraId);
       return { verceraId, qrCode };
     } catch (error) {
       console.log(error);
@@ -84,5 +85,5 @@ export default function useCreateUser() {
     }
   }
 
-  return { createUser, userName, isLoading };
+  return { createUser, isLoading };
 }

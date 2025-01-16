@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -89,9 +89,8 @@ export default function EventPage() {
         )}
         <CardFooter>
           <Button
-            className="w-full"
+            className="w-full cursor-pointer"
             onClick={() => handleEventRegistration(event?.id)}
-            disabled
           >
             {registrationLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,9 +24,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Icons } from "@/components/ui/icons";
-
+import { useRouter } from "next/navigation";
 import useCreateUser from "@/utils/useRegister.js";
 import Link from "next/link";
+import UserContext from "@/utils/UserContext";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -54,8 +55,8 @@ export default function RegisterForm() {
     qrCode: string;
   } | null>(null);
 
-  const { createUser, username, isLoading } = useCreateUser();
-
+  const { createUser, isLoading } = useCreateUser();
+  const { loggedinUser, updateLoggedinUser} = useContext(UserContext);
   const {
     register,
     handleSubmit,
@@ -65,6 +66,7 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
+  const router = useRouter();
   const onSubmit = async (data: RegisterFormData) => {
     try {
       const result = await createUser(
@@ -84,8 +86,14 @@ export default function RegisterForm() {
       console.log("Registration successful");
     } catch (error) {
       console.error("Registration error:", error);
+    }finally{
+      updateLoggedinUser();
+      if(loggedinUser !== '') {
+        router.push('/');
+      }
     }
   };
+
 
   return (
     <>

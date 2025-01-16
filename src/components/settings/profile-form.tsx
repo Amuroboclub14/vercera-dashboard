@@ -84,12 +84,12 @@ export function ProfileForm() {
   useEffect(() => {
     if (userInfo) {
       form.reset({
-        name: userInfo.name,
-        email: userInfo.email,
+        name: userInfo?.name,
+        email: userInfo?.email,
         // bio: userInfo.bio,
-        enrollmentNumber: userInfo.enrollmentNumber,
-        facultyNumber: userInfo.facultyNumber,
-        course: userInfo.course,
+        enrollmentNumber: userInfo?.enrollmentNumber,
+        facultyNumber: userInfo?.facultyNumber,
+        course: userInfo?.course,
         // yearOfStudy: userInfo.yearOfStudy,
       });
     }
@@ -101,19 +101,19 @@ export function ProfileForm() {
     const formData = form.getValues(); // Get all form values at once
     const updatedData: Partial<ProfileFormValues> = {};
 
-    if (formData.name !== userInfo.name) {
+    if (formData.name !== userInfo?.name) {
       updatedData.name = formData.name;
     }
-    if (formData.email !== userInfo.email) {
+    if (formData.email !== userInfo?.email) {
       updatedData.email = formData.email;
     }
-    if (formData.enrollmentNumber !== userInfo.enrollmentNumber) {
+    if (formData.enrollmentNumber !== userInfo?.enrollmentNumber) {
       updatedData.enrollmentNumber = formData.enrollmentNumber;
     }
-    if (formData.facultyNumber !== userInfo.facultyNumber) {
+    if (formData.facultyNumber !== userInfo?.facultyNumber) {
       updatedData.facultyNumber = formData.facultyNumber;
     }
-    if (formData.course !== userInfo.course) {
+    if (formData.course !== userInfo?.course) {
       updatedData.course = formData.course;
     }
     // if (formData.yearOfStudy !== userInfo.yearOfStudy) {
@@ -123,7 +123,7 @@ export function ProfileForm() {
     console.log(updatedData);
     if (Object.keys(updatedData).length > 0) {
       try {
-        await pb.collection("users").update(userInfo.id, updatedData);
+        await pb.collection("users").update(userInfo?.id, updatedData);
         toast({
           title: "Profile updated",
           description: "Your profile has been updated successfully.",
