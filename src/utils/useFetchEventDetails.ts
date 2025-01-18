@@ -11,6 +11,9 @@ type EventDetail = {
   image: string;
   teamSize: number;
   location: string;
+  eventCategory: string;
+  singleGamePrice: number;
+  bundlePrice: number;
 };
 
 export default function useFetchEventDetails(eventId: string | undefined) {
@@ -40,6 +43,9 @@ export default function useFetchEventDetails(eventId: string | undefined) {
           image: data.image,
           teamSize: data.max_team_members, // Adjust field names to match your API
           location: data.location,
+          eventCategory: data.eventCategory,
+          singleGamePrice: data.singleGamePrice,
+          bundlePrice: data.bundlePrice,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
