@@ -676,11 +676,14 @@ export default function EventPage() {
 
   const handleAction = () => {
     if (event?.eventCategory === "gaming") {
-      router.push(`/events/${event.id}/payment`);
+      // router.push(`/events/${event.id}/payment`);
+      router.push("/coming-soon");
     } else if (event?.eventCategory === "bundle") {
-      router.push(`/events/${event.id}/bundle-payment`);
+      // router.push(`/events/${event.id}/bundle-payment`);
+      router.push("/coming-soon");
     } else {
-      router.push(`/events/${event.id}/register`);
+      // router.push(`/events/${event.id}/register`);
+      router.push("/coming-soon");
     }
   };
 
