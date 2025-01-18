@@ -23,8 +23,8 @@ const useLogin = (): UseLoginReturn => {
           setLoggedinUser(pb.authStore.record.name);
           setUserInfo(pb.authStore.record);
         }
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        throw new Error(error?.message || "Login failed. Please try again.");
       }
     },
     [setLoggedinUser]
