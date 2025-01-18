@@ -20,6 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     loggedinUser
       ? { label: "Registered Events", href: "/registered-events" }
       : null,
+    { label: "Contact Us", href: "/contact" },
     {
       label: loggedinUser ? loggedinUser : "Login",
       href: loggedinUser ? "/profile" : "/login",
