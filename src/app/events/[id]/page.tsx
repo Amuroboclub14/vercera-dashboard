@@ -745,7 +745,7 @@ export default function EventPage() {
         <CardFooter className="space-x-4">
           <Button onClick={handleAction} className="w-full">
             {event?.eventCategory === "gaming"
-              ? "Pay Rs. 50 for this game"
+              ? `Pay Rs. ${event.singleGamePrice} for this game`
               : event?.eventCategory === "bundle"
               ? "Pay Rs. 90 for bundle"
               : "Register for Event"}
