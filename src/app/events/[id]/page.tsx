@@ -679,6 +679,7 @@ export default function EventPage() {
       // router.push(`/events/${event.id}/payment`);
       router.push("/coming-soon");
     } else if (event?.eventCategory === "bundle") {
+      // router.push(`/events/${event.id}/payment`);
       // router.push(`/events/${event.id}/bundle-payment`);
       router.push("/coming-soon");
     } else {
