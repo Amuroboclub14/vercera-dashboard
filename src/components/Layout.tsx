@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import UserContext from "@/utils/UserContext";
 import { useContext } from "react";
+import { Footer } from "@/components/Footer";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,6 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     loggedinUser
       ? { label: "Registered Events", href: "/registered-events" }
       : null,
+    { label: "Contact Us", href: "/contact" },
     {
       label: loggedinUser ? loggedinUser : "Login",
       href: loggedinUser ? "/profile" : "/login",
@@ -88,6 +90,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 container mx-auto px-4 py-6 md:py-10">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }
