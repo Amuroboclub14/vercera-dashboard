@@ -27,7 +27,7 @@ import { Icons } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import useCreateUser from "@/utils/useRegister.js";
 import Link from "next/link";
-import UserContext from "@/utils/UserContext";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -55,8 +55,10 @@ export default function RegisterForm() {
     qrCode: string;
   } | null>(null);
 
-  const { createUser, isLoading } = useCreateUser();
-  const { loggedinUser, updateLoggedinUser} = useContext(UserContext);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const { createUser, username, isLoading } = useCreateUser();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -83,14 +85,16 @@ export default function RegisterForm() {
       );
 
       setRegistrationResult(result);
-      console.log("Registration successful");
+      setStatusMessage(
+        "Registration successful! Redirecting to the dashboard..."
+      );
+
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
     } catch (error) {
       console.error("Registration error:", error);
-    }finally{
-      updateLoggedinUser();
-      if(loggedinUser !== '') {
-        router.push('/');
-      }
+      setStatusMessage("Registration failed. Please try again.");
     }
   };
 
@@ -260,6 +264,17 @@ export default function RegisterForm() {
             )}
             Register
           </Button>
+          {statusMessage && (
+            <div
+              className={`p-4 mb-4 text-white rounded ${
+                statusMessage.includes("successful")
+                  ? "bg-green-500"
+                  : "bg-red-500"
+              }`}
+            >
+              {statusMessage}
+            </div>
+          )}
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
             <Link href="/login" className="text-blue-600 hover:underline">

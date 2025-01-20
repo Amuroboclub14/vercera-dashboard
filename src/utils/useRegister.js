@@ -11,11 +11,11 @@ export default function useCreateUser() {
 
   // Function to generate unique VarceraId
   const generateVerceraId = (enrollmentNumber) => {
-    const timestamp = Date.now().toString().slice(-4);
-    const randomNum = Math.floor(Math.random() * 1000)
+    const timestamp = Date.now().toString().slice(-2);
+    const randomNum = Math.floor(Math.random() * 100)
       .toString()
-      .padStart(3, "0");
-    return `V${enrollmentNumber.slice(-4)}${timestamp}${randomNum}`;
+      .padStart(2, "0");
+    return `V${enrollmentNumber.slice(0, 3)}${timestamp}${randomNum}`;
   };
 
   // Function to generate QR code

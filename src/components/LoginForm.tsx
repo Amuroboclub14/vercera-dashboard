@@ -32,6 +32,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
   const router = useRouter();
 
   const { handleLogin, login } = useLogin();
@@ -46,16 +48,22 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    setAuthError(null); // Reset previous errors
+
     console.log(data);
     try {
       await handleLogin(data.enrollmentNumber, data.password);
       // Handle successful login (e.g., redirect to dashboard)
       console.log("Login successful");
-    } catch (error) {
-      console.error("Login error:", error);
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    } catch (error: any) {
+      setAuthError(error.message || "Invalid login credentials.");
+      console.log(error);
+      console.log(error.message);
     } finally {
       setIsLoading(false);
-      router.push("/dashboard");
     }
   };
 
@@ -106,6 +114,18 @@ export default function LoginForm() {
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>
+        {/* {authError && (
+          <p className="text-sm text-red-500 text-center">{authError}</p>
+        )} */}
+        {authError && (
+          <div
+            className={`p-4 mb-4 text-white rounded ${
+              authError.includes("successful") ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {authError}
+          </div>
+        )}
         <p className="text-sm text-center text-gray-600">
           Don&apos;t have an account?{" "}
           <Link href="/register" className="text-blue-600 hover:underline">

@@ -9,6 +9,9 @@ type Event = {
   description: string;
   date: string;
   time: string;
+  eventCategory: string;
+  singleGamePrice?: number; // Optional field for gaming events
+  bundlePrice?: number; // Optional field for gaming bundle
 };
 
 export default function useFetchEvents() {
@@ -28,11 +31,13 @@ export default function useFetchEvents() {
           id: record.id,
           name: record.name,
           shortDescription: record.shortDescription,
-          // description: record.description,
           description: record.description.replace(/\n/g, "<br />"),
           image: record.image,
           date: record.date,
           time: record.date,
+          eventCategory: record.eventCategory,
+          singleGamePrice: record.singleGamePrice ?? null, // Optional
+          bundlePrice: record.bundlePrice ?? null, // Optional
         }));
 
         setEvents(formattedEvents);
