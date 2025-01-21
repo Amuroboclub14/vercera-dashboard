@@ -26,7 +26,7 @@ export default function EventPage() {
   const handleAction = () => {
     if (event?.eventCategory === "gaming") {
       // router.push(`/events/${event.id}/payment`);
-      router.push("/regsiter");
+      router.push("/register");
       // router.push("/coming-soon");
     } else if (event?.eventCategory === "bundle") {
       // router.push(`/events/${event.id}/payment`);
