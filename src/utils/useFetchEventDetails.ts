@@ -14,6 +14,7 @@ type EventDetail = {
   eventCategory: string;
   singleGamePrice: number;
   bundlePrice: number;
+  gameName: string;
 };
 
 export default function useFetchEventDetails(eventId: string | undefined) {
@@ -46,6 +47,7 @@ export default function useFetchEventDetails(eventId: string | undefined) {
           eventCategory: data.eventCategory,
           singleGamePrice: data.singleGamePrice,
           bundlePrice: data.bundlePrice,
+          gameName: data.gameName,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");

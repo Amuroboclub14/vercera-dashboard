@@ -35,7 +35,7 @@ const registerSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   enrollmentNumber: z
     .string()
-    .min(1, "Enrollment number is required")
+    .max(6, "Enrollment number must be valid")
     .transform((val) => val.toUpperCase()),
   facultyNumber: z.string().min(1, "Faculty number is required"),
   phoneNo: z.string().regex(/^\+?\d{10,15}$/, "Invalid phone number"),
