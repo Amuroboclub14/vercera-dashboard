@@ -377,15 +377,17 @@ export default function EventPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmitRegistration} className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Team Name</Label>
-                  <Input
-                    value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
-                    placeholder="Enter team name"
-                    required
-                  />
-                </div>
+                {event?.teamSize !== 1 && (
+                  <div className="space-y-2">
+                    <Label>Team Name</Label>
+                    <Input
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      placeholder="Enter team name"
+                      required
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label>
                     {event?.teamSize === 1 ? "Participant" : "Team Members"}
@@ -439,9 +441,8 @@ export default function EventPage() {
                   className="w-full"
                   disabled={
                     isRegistering ||
-                    !teamName ||
-                    team.length < 1 || // Changed from 2 to 1 as minimum
-                    team.length > (event?.teamSize || 1) // Added max team size check
+                    (event?.teamSize !== 1 && (!teamName || team.length < 2)) || // Team name and size check only for team events
+                    team.length > (event?.teamSize || 1) // Max team size check
                   }
                 >
                   {isRegistering ? "Registering..." : "Register"}
