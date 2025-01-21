@@ -89,7 +89,7 @@ export default function RegisterForm() {
       );
 
       setTimeout(() => {
-        router.push("/");
+        router.push("/login");
       }, 2000);
     } catch (error) {
       console.error("Registration error:", error);
