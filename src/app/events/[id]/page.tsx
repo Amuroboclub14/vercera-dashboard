@@ -1,654 +1,3 @@
-// "use client";
-
-// // import { useEffect, useState } from "react";
-// import { useParams } from "next/navigation";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
-// import Loader from "@/components/added-components/loader";
-// import useFetchEventDetails from "@/utils/useFetchEventDetails";
-// import useEventRegister from "@/utils/useEventRegister";
-// // import useCreateTeam from "@/utils/useCreateTeam";
-// // import useJoinTeam from "@/utils/useJoinTeam";
-// import { Input } from "@/components/ui/input";
-// import Image from "next/image";
-// import { Icons } from "@/components/ui/icons";
-
-// export default function EventPage() {
-//   const params = useParams();
-//   const { event, loading, error } = useFetchEventDetails(params.id);
-//   const { handleEventRegistration, registrationLoading, registrationError } =
-//     useEventRegister();
-//   // const {
-//   //   handleCreateTeam,
-//   //   team: createdTeam,
-//   //   loading: creatingTeam,
-//   //   error: createError,
-//   // } = useCreateTeam();
-//   // const {
-//   //   handleJoinTeam,
-//   //   team: joinedTeam,
-//   //   loading: joiningTeam,
-//   //   error: joinError,
-//   // } = useJoinTeam();
-
-//   // const [teamName, setTeamName] = useState("");
-//   // const [teamCode, setTeamCode] = useState("");
-//   // const [teamInfo, setTeamInfo] = useState(null); // Store team details
-//   // const [isCreatingTeam, setIsCreatingTeam] = useState(true);
-
-//   // // Persist team info in localStorage
-//   // useEffect(() => {
-//   //   const savedTeamInfo = localStorage.getItem("teamInfo");
-//   //   if (savedTeamInfo) {
-//   //     setTeamInfo(JSON.parse(savedTeamInfo));
-//   //   }
-//   // }, []);
-
-//   // useEffect(() => {
-//   //   if (createdTeam || joinedTeam) {
-//   //     const currentTeam = createdTeam || joinedTeam;
-//   //     setTeamInfo(currentTeam);
-//   //     localStorage.setItem("teamInfo", JSON.stringify(currentTeam));
-//   //   }
-//   // }, [createdTeam, joinedTeam]);
-
-//   if (loading) return <Loader />;
-//   if (error) return <p className="text-red-500">Error: {error}</p>;
-
-//   return (
-//     <div className="max-w-3xl mx-auto">
-//       <Card>
-//         {/* Event Details */}
-//         <div className="relative h-60 w-full overflow-hidden">
-//           <Image
-//             src={
-//               `https://amuroboclub.pockethost.io/api/files/events/${event?.id}/${event?.image}` ||
-//               "/image.JPG"
-//             }
-//             alt={event?.name}
-//             width={1920}
-//             height={1080}
-//             className="object-cover w-full h-full rounded-t-xl object-top"
-//           />
-//         </div>
-//         <CardHeader>
-//           <CardTitle className="text-3xl mt-4">{event?.name}</CardTitle>
-//           <CardDescription>
-//             <pre className="whitespace-pre-wrap font-sans">
-//               {event?.description}
-//             </pre>
-//           </CardDescription>
-//         </CardHeader>
-//         <CardContent className="space-y-4">
-//           <div className="flex items-center space-x-2 text-sm">
-//             <CalendarIcon className="h-4 w-4" />
-//             <span>
-//               {new Date(event?.date).toLocaleDateString("en-US", {
-//                 weekday: "long",
-//                 year: "numeric",
-//                 month: "long",
-//                 day: "numeric",
-//               })}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-sm">
-//             <ClockIcon className="h-4 w-4" />
-//             <span>
-//               {new Date(event?.time).toLocaleTimeString("en-US", {
-//                 hour: "2-digit",
-//                 minute: "2-digit",
-//                 hour12: true,
-//                 timeZone: "UTC",
-//               })}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-sm">
-//             <UsersIcon className="h-4 w-4" />
-//             <span>Team Size: {event?.teamSize} members</span>
-//           </div>
-//           <div className="text-sm">
-//             <strong>Location:</strong> {event?.location}
-//           </div>
-//         </CardContent>
-//         {registrationError && (
-//           <div className="text-center text-red-500 text-sm mb-2">
-//             {registrationError}
-//           </div>
-//         )}
-//         <CardFooter>
-//           {/* <div className="space-y-4 w-full">
-//             <div className="flex justify-center space-x-4">
-//               <Button onClick={() => setIsCreatingTeam(true)}>
-//                 Create Team
-//               </Button>
-//               <Button onClick={() => setIsCreatingTeam(false)}>
-//                 Join Team
-//               </Button>
-//             </div>
-
-//             {isCreatingTeam ? (
-//               <div className="space-y-2">
-//                 <Input
-//                   placeholder="Enter Team Name"
-//                   value={teamName}
-//                   onChange={(e) => setTeamName(e.target.value)}
-//                 />
-//                 <Button
-//                   className="w-full"
-//                   onClick={() => handleCreateTeam(event?.id, teamName)}
-//                   disabled={creatingTeam}
-//                 >
-//                   {creatingTeam && (
-//                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-//                   )}
-//                   Create Team
-//                 </Button>
-//                 {createError && (
-//                   <p className="text-red-500 text-sm">{createError}</p>
-//                 )}
-//               </div>
-//             ) : (
-//               <div className="space-y-2">
-//                 <Input
-//                   placeholder="Enter Team Code"
-//                   value={teamCode}
-//                   onChange={(e) => setTeamCode(e.target.value)}
-//                 />
-//                 <Button
-//                   className="w-full"
-//                   onClick={() => handleJoinTeam(teamCode)}
-//                   disabled={joiningTeam}
-//                 >
-//                   {joiningTeam && (
-//                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-//                   )}
-//                   Join Team
-//                 </Button>
-//                 {joinError && (
-//                   <p className="text-red-500 text-sm">{joinError}</p>
-//                 )}
-//               </div>
-//             )}
-//           </div> */}
-//         </CardFooter>
-//       </Card>
-
-//       {/* Team Info Container */}
-//       {/* {teamInfo && (
-//         <div className="mt-8 p-4 bg-gray-100 rounded-lg shadow-md">
-//           <h3 className="text-xl font-bold">Your Team</h3>
-//           <p>
-//             <strong>Team Name:</strong> {teamInfo.teamName}
-//           </p>
-//           <p>
-//             <strong>Team Code:</strong> {teamInfo.teamCode}
-//           </p>
-//           <h4 className="mt-4 font-bold">Members:</h4>
-//           <ul className="list-disc pl-4">
-//             {teamInfo.members.map((member: string) => (
-//               <li key={member}>{member}</li>
-//             ))}
-//           </ul>
-//         </div>
-//       )} */}
-//     </div>
-//   );
-// }
-
-// // "use client";
-
-// // import { useParams } from "next/navigation";
-// // import { useEffect, useState } from "react";
-// // import { Button } from "@/components/ui/button";
-// // import {
-// //   Card,
-// //   CardContent,
-// //   CardDescription,
-// //   CardFooter,
-// //   CardHeader,
-// //   CardTitle,
-// // } from "@/components/ui/card";
-// // import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
-// // import Loader from "@/components/added-components/loader";
-// // import useFetchEventDetails from "@/utils/useFetchEventDetails";
-// // import Image from "next/image";
-// // import { Icons } from "@/components/ui/icons";
-// // import useEventRegister from "@/utils/useEventRegister";
-// // import useCreateTeam from "@/utils/useCreateTeam";
-// // import useJoinTeam from "@/utils/useJoinTeam";
-// // import { Input } from "@/components/ui/input";
-
-// // export default function EventPage() {
-// //   const params = useParams();
-// //   const { event, loading, error } = useFetchEventDetails(params.id);
-// //   const { handleEventRegistration, registrationLoading, registrationError } =
-// //     useEventRegister();
-
-// //   const {
-// //     handleCreateTeam,
-// //     team: createdTeam,
-// //     loading: creatingTeam,
-// //     error: createError,
-// //   } = useCreateTeam();
-// //   const {
-// //     handleJoinTeam,
-// //     team: joinedTeam,
-// //     loading: joiningTeam,
-// //     error: joinError,
-// //   } = useJoinTeam();
-
-// //   const [teamName, setTeamName] = useState("");
-// //   const [teamCode, setTeamCode] = useState("");
-// //   const [isCreatingTeam, setIsCreatingTeam] = useState(true);
-// //   const [teamInfo, setTeamInfo] = useState(null); // Stores team info to display below the card
-
-// //   // Clear team info on logout or session end
-// //   useEffect(() => {
-// //     if (!localStorage.getItem("token")) {
-// //       setTeamInfo(null);
-// //     }
-// //   }, []);
-
-// //   useEffect(() => {
-// //     if (createdTeam || joinedTeam) {
-// //       // Fetch the complete team details when team is created or joined
-// //       fetch(
-// //         `/api/events/${event?.id}/team/${
-// //           createdTeam?.teamCode || joinedTeam?.teamCode
-// //         }`
-// //       )
-// //         .then((res) => res.json())
-// //         .then((data) => setTeamInfo(data))
-// //         .catch((err) => console.error("Failed to fetch team info:", err));
-// //     }
-// //   }, [createdTeam, joinedTeam, event]);
-
-// //   // Prevent duplicate team names and ensure unique team codes
-// //   const createTeamWithValidation = async () => {
-// //     if (!teamName) return alert("Team name cannot be empty!");
-// //     if (!event) return;
-
-// //     try {
-// //       const teamCode = `${teamName}_${Math.random()
-// //         .toString(36)
-// //         .slice(2, 6)
-// //         .toUpperCase()}`;
-// //       await handleCreateTeam(event.id, teamName, teamCode, event.teamSize);
-// //     } catch (err) {
-// //       console.error("Failed to create team:", err);
-// //     }
-// //   };
-
-// //   if (loading) return <Loader />;
-// //   if (error) return <p className="text-red-500">Error: {error}</p>;
-
-// //   return (
-// //     <div className="max-w-3xl mx-auto">
-// //       <Card>
-// //         {/* Event Image */}
-// //         <div className="relative h-60 w-full overflow-hidden">
-// //           <Image
-// //             src={
-// //               `https://amuroboclub.pockethost.io/api/files/events/${event?.id}/${event?.image}` ||
-// //               "/image.JPG"
-// //             }
-// //             alt={event?.name}
-// //             width={1920}
-// //             height={1080}
-// //             className="object-cover w-full h-full rounded-t-xl object-top"
-// //           />
-// //         </div>
-// //         <CardHeader>
-// //           <CardTitle className="text-3xl mt-4">{event?.name}</CardTitle>
-// //           <CardDescription>
-// //             <pre className="whitespace-pre-wrap font-sans">
-// //               {event?.description}
-// //             </pre>
-// //           </CardDescription>
-// //         </CardHeader>
-// //         <CardContent className="space-y-4">
-// //           <div className="flex items-center space-x-2 text-sm">
-// //             <CalendarIcon className="h-4 w-4" />
-// //             <span>
-// //               {new Date(event?.date).toLocaleDateString("en-US", {
-// //                 weekday: "long",
-// //                 year: "numeric",
-// //                 month: "long",
-// //                 day: "numeric",
-// //               })}
-// //             </span>
-// //           </div>
-// //           <div className="flex items-center space-x-2 text-sm">
-// //             <ClockIcon className="h-4 w-4" />
-// //             <span>
-// //               {new Date(event?.time).toLocaleTimeString("en-US", {
-// //                 hour: "2-digit",
-// //                 minute: "2-digit",
-// //                 hour12: true,
-// //                 timeZone: "UTC",
-// //               })}
-// //             </span>
-// //           </div>
-// //           <div className="flex items-center space-x-2 text-sm">
-// //             <UsersIcon className="h-4 w-4" />
-// //             <span>Team Size: {event?.teamSize} members</span>
-// //           </div>
-// //           <div className="text-sm">
-// //             <strong>Location:</strong> {event?.location}
-// //           </div>
-// //         </CardContent>
-// //         {registrationError && (
-// //           <div className="text-center text-red-500 text-sm mb-2">
-// //             {registrationError}
-// //           </div>
-// //         )}
-// //         <CardFooter>
-// //           <div className="space-y-4 w-full">
-// //             <div className="flex justify-center space-x-4">
-// //               <Button onClick={() => setIsCreatingTeam(true)}>
-// //                 Create Team
-// //               </Button>
-// //               <Button onClick={() => setIsCreatingTeam(false)}>
-// //                 Join Team
-// //               </Button>
-// //             </div>
-// //             {isCreatingTeam ? (
-// //               <div className="space-y-2">
-// //                 <Input
-// //                   placeholder="Enter Team Name"
-// //                   value={teamName}
-// //                   onChange={(e) => setTeamName(e.target.value)}
-// //                 />
-// //                 <Button
-// //                   className="w-full"
-// //                   onClick={createTeamWithValidation}
-// //                   disabled={creatingTeam}
-// //                 >
-// //                   {creatingTeam && (
-// //                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-// //                   )}
-// //                   Create Team
-// //                 </Button>
-// //                 {createError && (
-// //                   <p className="text-red-500 text-sm">{createError}</p>
-// //                 )}
-// //               </div>
-// //             ) : (
-// //               <div className="space-y-2">
-// //                 <Input
-// //                   placeholder="Enter Team Code"
-// //                   value={teamCode}
-// //                   onChange={(e) => setTeamCode(e.target.value)}
-// //                 />
-// //                 <Button
-// //                   className="w-full"
-// //                   onClick={() => handleJoinTeam(teamCode)}
-// //                   disabled={joiningTeam}
-// //                 >
-// //                   {joiningTeam && (
-// //                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-// //                   )}
-// //                   Join Team
-// //                 </Button>
-// //                 {joinError && (
-// //                   <p className="text-red-500 text-sm">{joinError}</p>
-// //                 )}
-// //               </div>
-// //             )}
-// //           </div>
-// //         </CardFooter>
-// //       </Card>
-// //       {teamInfo && (
-// //         <div className="mt-8">
-// //           <h2 className="text-xl font-bold">Team Details</h2>
-// //           <p>
-// //             <strong>Team Name:</strong> {teamInfo.teamName}
-// //           </p>
-// //           <p>
-// //             <strong>Team Code:</strong> {teamInfo.teamCode}
-// //           </p>
-// //           <p>
-// //             <strong>Members:</strong>
-// //           </p>
-// //           <ul>
-// //             {teamInfo.members.map((member) => (
-// //               <li key={member.id}>{member.name}</li>
-// //             ))}
-// //           </ul>
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // }
-
-// "use client";
-
-// import { useParams } from "next/navigation";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
-// import Loader from "@/components/added-components/loader";
-// import useFetchEventDetails from "@/utils/useFetchEventDetails"; // Import the custom hook
-// import Image from "next/image";
-// import { Icons } from "@/components/ui/icons";
-// import useEventRegister from "@/utils/useEventRegister";
-
-// export default function EventPage() {
-//   const params = useParams();
-//   const { event, loading, error } = useFetchEventDetails(params.id);
-//   const { handleEventRegistration, registrationLoading, registrationError } =
-//     useEventRegister();
-
-//   if (loading) return <Loader />;
-//   if (error) return <p className="text-red-500">Error: {error}</p>;
-
-//   return (
-//     <div className="max-w-3xl mx-auto">
-//       <Card>
-//         {/* Event Image */}
-//         <div className="relative h-60 w-full overflow-hidden">
-//           <Image
-//             src={
-//               `https://amuroboclub.pockethost.io/api/files/events/${event?.id}/${event?.image}` ||
-//               "/image.JPG"
-//             } // Replace with dynamic image URL
-//             alt={event?.name}
-//             width={1920}
-//             height={1080}
-//             className="object-cover w-full h-full rounded-t-xl object-top"
-//           />
-//         </div>
-//         <CardHeader>
-//           <CardTitle className="text-3xl mt-4">{event?.name}</CardTitle>
-//           {/* <CardDescription>{event?.description}</CardDescription> */}
-//           <CardDescription>
-//             <pre className="whitespace-pre-wrap font-sans">
-//               {event?.description}
-//             </pre>
-//           </CardDescription>
-//         </CardHeader>
-//         <CardContent className="space-y-4">
-//           <div className="flex items-center space-x-2 text-sm">
-//             <CalendarIcon className="h-4 w-4" />
-//             <span>
-//               {new Date(event?.date).toLocaleDateString("en-US", {
-//                 weekday: "long",
-//                 year: "numeric",
-//                 month: "long",
-//                 day: "numeric",
-//               })}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-sm">
-//             <ClockIcon className="h-4 w-4" />
-//             <span>
-//               {new Date(event?.time).toLocaleTimeString("en-US", {
-//                 hour: "2-digit",
-//                 minute: "2-digit",
-//                 hour12: true,
-//                 timeZone: "UTC", // Forces UTC interpretation
-//               })}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-sm">
-//             <UsersIcon className="h-4 w-4" />
-//             <span>Team Size: {event?.teamSize} members</span>
-//           </div>
-//           <div className="text-sm">
-//             <strong>Location:</strong> {event?.location}
-//           </div>
-//         </CardContent>
-//         {registrationError && (
-//           <div className="text-center text-red-500 text-sm mb-2">
-//             {registrationError}
-//           </div>
-//         )}
-//         <CardFooter>
-//           <Button
-//             className="w-full"
-//             onClick={() => handleEventRegistration(event?.id)}
-//             disabled
-//           >
-//             {registrationLoading && (
-//               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-//             )}
-//             Register for Event
-//           </Button>
-//         </CardFooter>
-//       </Card>
-//     </div>
-//   );
-// }
-
-// "use client";
-
-// import { useParams, useRouter } from "next/navigation";
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardFooter,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { CalendarIcon, ClockIcon, UsersIcon } from "lucide-react";
-// import Loader from "@/components/added-components/loader";
-// import useFetchEventDetails from "@/utils/useFetchEventDetails";
-// import Image from "next/image";
-// import GameComponent from "@/components/GameComponent";
-// import BundlePayment from "@/components/BundleComponent";
-
-// export default function EventPage() {
-//   const params = useParams();
-//   const router = useRouter();
-//   const { event, loading, error } = useFetchEventDetails(params.id);
-
-//   if (loading) return <Loader />;
-//   if (error) return <p className="text-red-500">Error: {error}</p>;
-
-//   const handleRegister = () => {
-//     router.push(`/events/${event.id}/register`);
-//   };
-
-//   const handlePayment = () => {
-//     router.push(`/events/${event.id}/payment`);
-//   };
-
-//   return (
-//     <div className="max-w-3xl mx-auto">
-//       <Card>
-//         <div className="relative h-60 w-full overflow-hidden">
-//           <Image
-//             src={
-//               `https://amuroboclub.pockethost.io/api/files/events/${event?.id}/${event?.image}` ||
-//               "/image.JPG"
-//             }
-//             alt={event?.name}
-//             width={1920}
-//             height={1080}
-//             className="object-cover w-full h-full rounded-t-xl object-top"
-//           />
-//         </div>
-//         <CardHeader>
-//           <CardTitle className="text-3xl mt-4">{event?.name}</CardTitle>
-//           <CardDescription>
-//             <pre className="whitespace-pre-wrap font-sans">
-//               {event?.description}
-//             </pre>
-//           </CardDescription>
-//         </CardHeader>
-//         <CardContent className="space-y-4">
-//           <div className="flex items-center space-x-2 text-sm">
-//             <CalendarIcon className="h-4 w-4" />
-//             <span>
-//               {new Date(event?.date).toLocaleDateString("en-US", {
-//                 weekday: "long",
-//                 year: "numeric",
-//                 month: "long",
-//                 day: "numeric",
-//               })}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-sm">
-//             <ClockIcon className="h-4 w-4" />
-//             <span>
-//               {new Date(event?.time).toLocaleTimeString("en-US", {
-//                 hour: "2-digit",
-//                 minute: "2-digit",
-//                 hour12: true,
-//                 timeZone: "UTC",
-//               })}
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-2 text-sm">
-//             <UsersIcon className="h-4 w-4" />
-//             <span>Team Size: {event?.teamSize} members</span>
-//           </div>
-//           <div className="text-sm">
-//             <strong>Location:</strong> {event?.location}
-//           </div>
-//         </CardContent>
-//         <CardFooter className="space-x-4">
-//           <Button onClick={handleRegister} className="w-full">
-//             Register for Event
-//             {event?.eventCategory === "gaming"}
-//           </Button>
-//         </CardFooter>
-//         {event?.eventCategory === "gaming" && (
-//           <CardFooter className="space-x-4">
-//             <Button onClick={handlePayment} className="w-full">
-//               Pay Rs. {event.singleGamePrice} to register
-//             </Button>
-//           </CardFooter>
-//         )}
-//         {event?.eventCategory === "bundle" && (
-//           <CardFooter className="space-x-4">
-//             <Button onClick={handlePayment} className="w-full">
-//               Pay Rs. {event.bundlePrice} to register
-//             </Button>
-//           </CardFooter>
-//         )}
-//       </Card>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -677,14 +26,17 @@ export default function EventPage() {
   const handleAction = () => {
     if (event?.eventCategory === "gaming") {
       // router.push(`/events/${event.id}/payment`);
-      router.push("/coming-soon");
+      router.push("/regsiter");
+      // router.push("/coming-soon");
     } else if (event?.eventCategory === "bundle") {
       // router.push(`/events/${event.id}/payment`);
       // router.push(`/events/${event.id}/bundle-payment`);
-      router.push("/coming-soon");
+      // router.push("/coming-soon");
+      router.push("/register");
     } else {
       // router.push(`/events/${event.id}/register`);
-      router.push("/coming-soon");
+      // router.push("/coming-soon");
+      router.push("/register");
     }
   };
 
@@ -755,3 +107,273 @@ export default function EventPage() {
     </div>
   );
 }
+
+// "use client";
+
+// import { useState } from "react";
+// import { useParams, useRouter } from "next/navigation";
+// import { Button } from "@/components/ui/button";
+// import {
+//   Card,
+//   CardContent,
+//   CardDescription,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+// import {
+//   CalendarIcon,
+//   ClockIcon,
+//   UsersIcon,
+//   PlusCircle,
+//   X,
+// } from "lucide-react";
+// import { toast } from "@/components/ui/use-toast";
+// import Loader from "@/components/added-components/loader";
+// import useFetchEventDetails from "@/utils/useFetchEventDetails";
+// import Image from "next/image";
+// import { useAuth } from "@/utils/useAuth"; // Assuming you have an auth hook
+
+// type TeamMember = {
+//   verceraId: string;
+//   name: string;
+// };
+
+// // This would typically come from your authentication context
+// //const LOGGED_IN_USER_VERCERA_ID = "USER123"
+
+// export default function EventPage() {
+//   const params = useParams();
+//   const router = useRouter();
+//   const { event, loading, error } = useFetchEventDetails(params.id);
+//   const { user } = useAuth(); // Assuming you have an auth hook
+
+//   const [showRegistration, setShowRegistration] = useState(false);
+//   const [teamName, setTeamName] = useState("");
+//   const [newTeammate, setNewTeammate] = useState("");
+//   const [team, setTeam] = useState<TeamMember[]>([]);
+//   const [isRegistering, setIsRegistering] = useState(false);
+
+//   useEffect(() => {
+//     //fetchEventDetails()
+//     // Add logged-in user as team lead
+//     if (user) {
+//       setTeam([{ verceraId: user.id, name: user.name }]);
+//     }
+//   }, [params.id, user]);
+
+//   const handleRegister = () => {
+//     if (event?.eventCategory === "gaming") {
+//       router.push(`/events/${event.id}/payment`);
+//     } else if (event?.eventCategory === "bundle") {
+//       router.push(`/events/${event.id}/bundle-payment`);
+//     } else {
+//       setShowRegistration(true);
+//       setTeam([{ verceraId: user?.id, name: user?.name }]); // Add logged-in user as team lead
+//     }
+//   };
+
+//   const handleAddTeammate = async () => {
+//     if (newTeammate && team.length < (event?.teamSize || 1)) {
+//       try {
+//         const userRecord = await pb.collection("users").getOne(newTeammate);
+//         setTeam([...team, { verceraId: userRecord.id, name: userRecord.name }]);
+//         setNewTeammate("");
+//       } catch (error) {
+//         console.error("Error fetching user details:", error);
+//         toast({
+//           title: "User Not Found",
+//           description: "Unable to find a user with the provided Vercera ID.",
+//           variant: "destructive",
+//         });
+//       }
+//     }
+//   };
+
+//   const handleRemoveTeammate = (verceraId: string) => {
+//     setTeam(team.filter((member) => member.verceraId !== verceraId));
+//   };
+
+//   const handleSubmitRegistration = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setIsRegistering(true);
+
+//     try {
+//       await pb.collection("registrations").create({
+//         event: event?.id,
+//         teamName: teamName,
+//         teamMembers: team.map((member) => member.verceraId),
+//       });
+
+//       toast({
+//         title: "Registration Successful",
+//         description: `Your team "${teamName}" has been registered for ${event?.name}`,
+//       });
+
+//       setShowRegistration(false);
+//       setTeamName("");
+//       setTeam([{ verceraId: user?.id, name: user?.name }]);
+//     } catch (error) {
+//       console.error("Error registering for event:", error);
+//       toast({
+//         title: "Registration Failed",
+//         description:
+//           "There was an error registering for the event. Please try again.",
+//         variant: "destructive",
+//       });
+//     } finally {
+//       setIsRegistering(false);
+//     }
+//   };
+
+//   if (loading) {
+//     return <Loader />;
+//   }
+
+//   if (error) {
+//     return <div>Error loading event details</div>;
+//   }
+
+//   if (!event) {
+//     return <div>Event not found</div>;
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto">
+//       <Card>
+//         <div className="relative h-60 w-full overflow-hidden">
+//           <Image
+//             src={
+//               `https://amuroboclub.pockethost.io/api/files/events/${
+//                 event?.id || "/placeholder.svg"
+//               }/${event?.image}` || "/image.JPG"
+//             }
+//             alt={event?.name}
+//             width={1920}
+//             height={1080}
+//             className="object-cover w-full h-full rounded-t-xl object-top"
+//           />
+//         </div>
+//         <CardHeader>
+//           <CardTitle className="text-3xl mt-4">{event?.name}</CardTitle>
+//           <CardDescription>
+//             <pre className="whitespace-pre-wrap font-sans">
+//               {event?.description}
+//             </pre>
+//           </CardDescription>
+//         </CardHeader>
+//         <CardContent className="space-y-4">
+//           <div className="flex items-center space-x-2 text-sm">
+//             <CalendarIcon className="h-4 w-4" />
+//             <span>
+//               {new Date(event?.date).toLocaleDateString("en-US", {
+//                 weekday: "long",
+//                 year: "numeric",
+//                 month: "long",
+//                 day: "numeric",
+//               })}
+//             </span>
+//           </div>
+//           <div className="flex items-center space-x-2 text-sm">
+//             <ClockIcon className="h-4 w-4" />
+//             <span>
+//               {new Date(event?.time).toLocaleTimeString("en-US", {
+//                 hour: "2-digit",
+//                 minute: "2-digit",
+//                 hour12: true,
+//                 timeZone: "UTC",
+//               })}
+//             </span>
+//           </div>
+//           <div className="flex items-center space-x-2 text-sm">
+//             <UsersIcon className="h-4 w-4" />
+//             <span>Team Size: {event?.teamSize} members</span>
+//           </div>
+//           <div className="text-sm">
+//             <strong>Location:</strong> {event?.location}
+//           </div>
+//         </CardContent>
+//         <CardFooter className="space-x-4">
+//           <Button onClick={handleRegister} className="w-full">
+//             {event?.eventCategory === "gaming"
+//               ? `Pay Rs. ${event.singleGamePrice} for this game`
+//               : event?.eventCategory === "bundle"
+//               ? "Pay Rs. 90 for bundle"
+//               : "Register for Event"}
+//           </Button>
+//         </CardFooter>
+//       </Card>
+
+//       {showRegistration && (
+//         <Card className="mt-6">
+//           <CardHeader>
+//             <CardTitle>Event Registration</CardTitle>
+//             <CardDescription>
+//               Form your team and register for this event.
+//             </CardDescription>
+//           </CardHeader>
+//           <CardContent>
+//             <form onSubmit={handleSubmitRegistration} className="space-y-4">
+//               <div className="space-y-2">
+//                 <Label htmlFor="teamName">Team Name</Label>
+//                 <Input
+//                   id="teamName"
+//                   value={teamName}
+//                   onChange={(e) => setTeamName(e.target.value)}
+//                   placeholder="Enter your team name"
+//                   required
+//                 />
+//               </div>
+//               <div className="space-y-2">
+//                 <Label>Team Members</Label>
+//                 <ul className="space-y-2">
+//                   {team.map((member) => (
+//                     <li
+//                       key={member.verceraId}
+//                       className="flex items-center justify-between bg-secondary p-2 rounded"
+//                     >
+//                       <span>
+//                         {member.name} ({member.verceraId})
+//                       </span>
+//                       {member.verceraId !== user?.id && (
+//                         <Button
+//                           variant="ghost"
+//                           size="sm"
+//                           onClick={() => handleRemoveTeammate(member.verceraId)}
+//                         >
+//                           <X className="h-4 w-4" />
+//                         </Button>
+//                       )}
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+//               {team.length < (event?.teamSize || 1) && (
+//                 <div className="flex space-x-2">
+//                   <Input
+//                     value={newTeammate}
+//                     onChange={(e) => setNewTeammate(e.target.value)}
+//                     placeholder="Enter teammate's Vercera ID"
+//                   />
+//                   <Button type="button" onClick={handleAddTeammate}>
+//                     <PlusCircle className="h-4 w-4 mr-2" />
+//                     Add
+//                   </Button>
+//                 </div>
+//               )}
+//               <Button
+//                 type="submit"
+//                 className="w-full"
+//                 disabled={isRegistering || team.length < 2 || !teamName}
+//               >
+//                 {isRegistering ? "Registering..." : "Complete Registration"}
+//               </Button>
+//             </form>
+//           </CardContent>
+//         </Card>
+//       )}
+//     </div>
+//   );
+// }
