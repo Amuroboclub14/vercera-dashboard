@@ -25,7 +25,16 @@ import useFetchEventDetails from "@/utils/useFetchEventDetails";
 import UserContext from "@/utils/UserContext"; // Import UserContext
 import Image from "next/image";
 import pb from "@/lib/pocketbase"; // PocketBase instance
-import { v4 as uuidv4 } from "uuid"; // To generate unique team codes
+
+// Function to generate short team code
+const generateTeamCode = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+};
 
 type TeamMember = {
   verceraId: string;
@@ -44,54 +53,75 @@ export default function EventPage() {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [isRegistering, setIsRegistering] = useState(false);
   const [teamCode, setTeamCode] = useState("");
+  const [registrationKey, setRegistrationKey] = useState(0); // Add this to force re-fetch
+
+  const fetchRegistrationDetails = async () => {
+    if (!userInfo || !event?.id) return;
+
+    try {
+      const registrations = await pb
+        .collection("eventRegistrations")
+        .getList(1, 1, {
+          filter: `event="${event.id}" && teamMembers~"${userInfo.verceraId}"`,
+          sort: "-created", // Sort by creation date in descending order
+        });
+
+      if (registrations.items.length > 0) {
+        const registration = registrations.items[0];
+        setTeamName(registration.teamName);
+        setTeamCode(registration.teamCode);
+
+        const teammates = await Promise.all(
+          registration.teamMembers.map(async (id: string) => {
+            const user = await pb
+              .collection("users")
+              .getFirstListItem(`verceraId="${id}"`);
+            return { verceraId: id, name: user.name };
+          })
+        );
+
+        setTeam(teammates);
+        setShowRegistration(true);
+      } else {
+        // No existing registration found
+        setTeamName("");
+        setTeamCode("");
+        setTeam([{ verceraId: userInfo.verceraId, name: userInfo.name }]);
+      }
+    } catch (error) {
+      console.error("Error fetching registration:", error);
+      setTeam([{ verceraId: userInfo.verceraId, name: userInfo.name }]);
+    }
+  };
 
   useEffect(() => {
-    const fetchRegistrationDetails = async () => {
-      if (userInfo) {
-        try {
-          const registration = await pb
-            .collection("eventRegistrations")
-            .getFirstListItem(
-              `event="${event?.id}" && teamMembers~"${userInfo.verceraId}"`
-            );
-
-          setTeamName(registration.teamName);
-          setTeamCode(registration.teamCode);
-          setTeam(
-            registration.teamMembers.map((verceraId: string) => ({
-              verceraId,
-              name: "Loading...", // Placeholder while fetching names
-            }))
-          );
-
-          const teammates = await Promise.all(
-            registration.teamMembers.map(async (id: string) => {
-              const user = await pb
-                .collection("users")
-                .getFirstListItem(`verceraId="${id}"`);
-              return { verceraId: id, name: user.name };
-            })
-          );
-
-          setTeam(teammates);
-          setShowRegistration(true);
-        } catch {
-          setTeam([{ verceraId: userInfo.verceraId, name: userInfo.name }]);
-        }
-      }
-    };
-
     fetchRegistrationDetails();
-  }, [event?.id, userInfo]);
+  }, [event?.id, userInfo, registrationKey]); // Add registrationKey to dependencies
 
   const handleRegister = async () => {
-    if (showRegistration) return; // Prevent re-registering if already registered
+    if (showRegistration) return;
 
-    if (event?.eventCategory === "gaming") {
-      router.push(`/events/${event.id}/payment`);
-    } else if (event?.eventCategory === "bundle") {
-      router.push(`/events/${event.id}/bundle-payment`);
-    } else {
+    try {
+      const existingRegistration = await pb
+        .collection("eventRegistrations")
+        .getFirstListItem(
+          `event="${event?.id}" && (teamMembers~"${userInfo.verceraId}")`
+        );
+
+      if (existingRegistration) {
+        alert("You are already registered for this event.");
+        setRegistrationKey((prev) => prev + 1); // Force re-fetch to show latest data
+        return;
+      }
+
+      if (event?.eventCategory === "gaming") {
+        router.push(`/events/${event.id}/payment`);
+      } else if (event?.eventCategory === "bundle") {
+        router.push(`/events/${event.id}/bundle-payment`);
+      } else {
+        setShowRegistration(true);
+      }
+    } catch {
       setShowRegistration(true);
     }
   };
@@ -112,7 +142,7 @@ export default function EventPage() {
           ...team,
           { verceraId: userRecord.verceraId, name: userRecord.name },
         ]);
-        setNewTeammate(""); // Reset input
+        setNewTeammate("");
       } catch (error) {
         alert(error.status === 404 ? "User not found." : "An error occurred.");
       }
@@ -132,18 +162,19 @@ export default function EventPage() {
     setIsRegistering(true);
 
     try {
-      const generatedTeamCode = uuidv4(); // Generate a unique team code
+      const generatedTeamCode = generateTeamCode();
       await pb.collection("eventRegistrations").create({
         event: event?.id,
         teamName: teamName,
         teamMembers: team.map((member) => member.verceraId),
         teamCode: generatedTeamCode,
-        leader: userInfo?.name, // Add leader's name
+        leader: userInfo?.name,
       });
 
-      setTeamCode(generatedTeamCode); // Store the generated team code locally
+      setTeamCode(generatedTeamCode);
       alert(`Your team "${teamName}" has been registered for ${event?.name}`);
       setShowRegistration(false);
+      setRegistrationKey((prev) => prev + 1); // Force re-fetch after new registration
     } catch {
       alert("Error registering your team.");
     } finally {
