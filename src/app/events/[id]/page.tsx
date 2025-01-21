@@ -53,7 +53,40 @@ export default function EventPage() {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [isRegistering, setIsRegistering] = useState(false);
   const [teamCode, setTeamCode] = useState("");
-  const [registrationKey, setRegistrationKey] = useState(0); // Add this to force re-fetch
+  const [registrationKey, setRegistrationKey] = useState(0);
+  const [hasValidPayment, setHasValidPayment] = useState(false);
+
+  const checkPaymentStatus = async () => {
+    if (!userInfo || !event) return false;
+
+    try {
+      const user = await pb
+        .collection("users")
+        .getFirstListItem(`verceraId="${userInfo.verceraId}"`);
+
+      // Check payment status based on event category
+      switch (event.eventCategory) {
+        case "gaming":
+          switch (event.gameName.toLowerCase()) {
+            case "bgmi":
+              return !!user.paymentScreenshotBGMI;
+            case "tekken":
+              return !!user.paymentScreenshotTekken;
+            case "chess":
+              return !!user.paymentScreenshotChess;
+            default:
+              return false;
+          }
+        case "bundle":
+          return !!user.paymentScreenshotBundle;
+        default:
+          return true; // Standard events don't need payment verification
+      }
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+      return false;
+    }
+  };
 
   const fetchRegistrationDetails = async () => {
     if (!userInfo || !event?.id) return;
@@ -63,7 +96,7 @@ export default function EventPage() {
         .collection("eventRegistrations")
         .getList(1, 1, {
           filter: `event="${event.id}" && teamMembers~"${userInfo.verceraId}"`,
-          sort: "-created", // Sort by creation date in descending order
+          sort: "-created",
         });
 
       if (registrations.items.length > 0) {
@@ -83,7 +116,6 @@ export default function EventPage() {
         setTeam(teammates);
         setShowRegistration(true);
       } else {
-        // No existing registration found
         setTeamName("");
         setTeamCode("");
         setTeam([{ verceraId: userInfo.verceraId, name: userInfo.name }]);
@@ -95,8 +127,16 @@ export default function EventPage() {
   };
 
   useEffect(() => {
-    fetchRegistrationDetails();
-  }, [event?.id, userInfo, registrationKey]); // Add registrationKey to dependencies
+    const initializeRegistration = async () => {
+      if (event) {
+        const paymentValid = await checkPaymentStatus();
+        setHasValidPayment(paymentValid);
+      }
+      fetchRegistrationDetails();
+    };
+
+    initializeRegistration();
+  }, [event?.id, userInfo, registrationKey]);
 
   const handleRegister = async () => {
     if (showRegistration) return;
@@ -110,22 +150,41 @@ export default function EventPage() {
 
       if (existingRegistration) {
         alert("You are already registered for this event.");
-        setRegistrationKey((prev) => prev + 1); // Force re-fetch to show latest data
+        setRegistrationKey((prev) => prev + 1);
         return;
       }
 
-      if (event?.eventCategory === "gaming") {
-        router.push(`/events/${event.id}/payment`);
-      } else if (event?.eventCategory === "bundle") {
-        router.push(`/events/${event.id}/bundle-payment`);
-      } else {
-        setShowRegistration(true);
+      if (
+        event?.eventCategory === "gaming" ||
+        event?.eventCategory === "bundle"
+      ) {
+        if (!hasValidPayment) {
+          const route =
+            event.eventCategory === "gaming"
+              ? `/events/${event.id}/payment`
+              : `/events/${event.id}/bundle-payment`;
+          router.push(route);
+          return;
+        }
       }
+
+      setShowRegistration(true);
     } catch {
+      if (
+        (event?.eventCategory === "gaming" ||
+          event?.eventCategory === "bundle") &&
+        !hasValidPayment
+      ) {
+        const route =
+          event.eventCategory === "gaming"
+            ? `/events/${event.id}/payment`
+            : `/events/${event.id}/bundle-payment`;
+        router.push(route);
+        return;
+      }
       setShowRegistration(true);
     }
   };
-
   const handleAddTeammate = async () => {
     if (newTeammate && team.length < (event?.teamSize || 1)) {
       if (team.some((member) => member.verceraId === newTeammate)) {
@@ -243,82 +302,108 @@ export default function EventPage() {
         </CardContent>
         <CardFooter className="space-x-4">
           {!showRegistration && (
-            <Button onClick={handleRegister} className="w-full">
-              Register for Event
-            </Button>
+            <>
+              {(event?.eventCategory === "gaming" ||
+                event?.eventCategory === "bundle") &&
+              !hasValidPayment ? (
+                <Button onClick={handleRegister} className="w-full">
+                  Proceed to Payment
+                </Button>
+              ) : (
+                <Button onClick={handleRegister} className="w-full">
+                  Register for Event
+                </Button>
+              )}
+            </>
           )}
         </CardFooter>
       </Card>
-      {showRegistration && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Event Registration</CardTitle>
-            <CardDescription>Form your team and register.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmitRegistration} className="space-y-4">
-              <div className="space-y-2">
-                <Label>Team Name</Label>
-                <Input
-                  value={teamName}
-                  onChange={(e) => setTeamName(e.target.value)}
-                  placeholder="Enter team name"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Team Members</Label>
-                <ul className="space-y-2">
-                  {team.map((member) => (
-                    <li
-                      key={member.verceraId}
-                      className="flex items-center justify-between bg-secondary p-2 rounded"
-                    >
-                      <span>
-                        {member.name} ({member.verceraId})
-                        {member.verceraId === userInfo?.verceraId && (
-                          <span className="ml-2 text-xs font-semibold text-primary">
-                            (Leader)
-                          </span>
-                        )}
-                      </span>
-                      {member.verceraId !== userInfo?.verceraId && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleRemoveTeammate(member.verceraId)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {team.length < (event?.teamSize || 1) && (
-                <div className="flex space-x-2">
+      {showRegistration &&
+        (event?.eventCategory === "standard" || hasValidPayment) && (
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Event Registration</CardTitle>
+              <CardDescription>
+                {event?.teamSize === 1
+                  ? "Register for this solo event."
+                  : "Form your team and register."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmitRegistration} className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Team Name</Label>
                   <Input
-                    value={newTeammate}
-                    onChange={(e) => setNewTeammate(e.target.value)}
-                    placeholder="Enter teammate's Vercera ID"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)}
+                    placeholder="Enter team name"
+                    required
                   />
-                  <Button type="button" onClick={handleAddTeammate}>
-                    <PlusCircle className="h-4 w-4 mr-2" />
-                    Add
-                  </Button>
                 </div>
-              )}
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isRegistering || !teamName || team.length < 2}
-              >
-                {isRegistering ? "Registering..." : "Register"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      )}
+                <div className="space-y-2">
+                  <Label>
+                    {event?.teamSize === 1 ? "Participant" : "Team Members"}
+                  </Label>
+                  <ul className="space-y-2">
+                    {team.map((member) => (
+                      <li
+                        key={member.verceraId}
+                        className="flex items-center justify-between bg-secondary p-2 rounded"
+                      >
+                        <span>
+                          {member.name} ({member.verceraId})
+                          {member.verceraId === userInfo?.verceraId && (
+                            <span className="ml-2 text-xs font-semibold text-primary">
+                              {event?.teamSize === 1
+                                ? "(Participant)"
+                                : "(Leader)"}
+                            </span>
+                          )}
+                        </span>
+                        {member.verceraId !== userInfo?.verceraId && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              handleRemoveTeammate(member.verceraId)
+                            }
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {team.length < (event?.teamSize || 1) && (
+                  <div className="flex space-x-2">
+                    <Input
+                      value={newTeammate}
+                      onChange={(e) => setNewTeammate(e.target.value)}
+                      placeholder="Enter teammate's Vercera ID"
+                    />
+                    <Button type="button" onClick={handleAddTeammate}>
+                      <PlusCircle className="h-4 w-4 mr-2" />
+                      Add
+                    </Button>
+                  </div>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={
+                    isRegistering ||
+                    !teamName ||
+                    team.length < 1 || // Changed from 2 to 1 as minimum
+                    team.length > (event?.teamSize || 1) // Added max team size check
+                  }
+                >
+                  {isRegistering ? "Registering..." : "Register"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        )}
     </div>
   );
 }
