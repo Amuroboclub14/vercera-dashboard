@@ -19,12 +19,15 @@ import {
   UsersIcon,
   PlusCircle,
   X,
+  AlertCircle,
+  Clock,
 } from "lucide-react";
 import Loader from "@/components/added-components/loader";
 import useFetchEventDetails from "@/utils/useFetchEventDetails";
 import UserContext from "@/utils/UserContext"; // Import UserContext
 import Image from "next/image";
 import pb from "@/lib/pocketbase"; // PocketBase instance
+import Link from "next/link";
 
 // Function to generate short team code
 const generateTeamCode = () => {
@@ -55,6 +58,29 @@ export default function EventPage() {
   const [teamCode, setTeamCode] = useState("");
   const [registrationKey, setRegistrationKey] = useState(0);
   const [hasValidPayment, setHasValidPayment] = useState(false);
+  const [verceraPaymentStatus, setVerceraPaymentStatus] = useState(false);
+  const [paymentUnderReview, setPaymentUnderReview] = useState(false);
+  const [isLoadingPaymentStatus, setIsLoadingPaymentStatus] = useState(true);
+
+  const checkVerceraPaymentStatus = async () => {
+    if (!userInfo) return;
+    try {
+      const user = await pb
+        .collection("users")
+        .getFirstListItem(`verceraId="${userInfo.verceraId}"`);
+      setVerceraPaymentStatus(user.paymentStatus || false);
+      setPaymentUnderReview(!!user.paymentScreenshot && !user.paymentStatus);
+    } catch (error) {
+      console.error("Error checking Vercera payment status:", error);
+      setVerceraPaymentStatus(false);
+    } finally {
+      setIsLoadingPaymentStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    checkVerceraPaymentStatus();
+  }, [userInfo]);
 
   const checkPaymentStatus = async () => {
     if (!userInfo || !event) return false;
@@ -300,26 +326,46 @@ export default function EventPage() {
             <strong>Location:</strong> {event?.location}
           </div>
         </CardContent>
-        <CardFooter className="space-x-4">
-          {!showRegistration && (
-            <>
-              {(event?.eventCategory === "gaming" ||
-                event?.eventCategory === "bundle") &&
-              !hasValidPayment ? (
-                <Button onClick={handleRegister} className="w-full">
-                  Proceed to Payment
-                </Button>
+        <CardFooter className="flex flex-col space-y-4">
+          {!verceraPaymentStatus ? (
+            <div className="w-full">
+              <Button className="w-full mb-2" disabled>
+                <AlertCircle className="mr-2 h-4 w-4" />
+                Register for Event
+              </Button>
+              {paymentUnderReview ? (
+                <div className="text-sm text-center text-orange-500 flex items-center justify-center">
+                  <Clock className="mr-2 h-4 w-4" />
+                  Your Vercera 4.0 payment is under review
+                </div>
               ) : (
-                <Button onClick={handleRegister} className="w-full">
-                  Register for Event
-                </Button>
+                <p className="text-sm text-center text-muted-foreground">
+                  Complete payment for Vercera 4.0 first.{" "}
+                  <Link
+                    href="/payment"
+                    className="text-primary hover:underline"
+                  >
+                    Click here to pay
+                  </Link>
+                </p>
               )}
-            </>
+            </div>
+          ) : (
+            !showRegistration && (
+              <Button onClick={handleRegister} className="w-full">
+                {(event?.eventCategory === "gaming" ||
+                  event?.eventCategory === "bundle") &&
+                !hasValidPayment
+                  ? "Proceed to Payment"
+                  : "Register for Event"}
+              </Button>
+            )
           )}
         </CardFooter>
       </Card>
       {showRegistration &&
-        (event?.eventCategory === "standard" || hasValidPayment) && (
+        (event?.eventCategory === "standard" || hasValidPayment) &&
+        verceraPaymentStatus && (
           <Card className="mt-6">
             <CardHeader>
               <CardTitle>Event Registration</CardTitle>
