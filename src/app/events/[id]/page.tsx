@@ -21,6 +21,7 @@ import {
   X,
   AlertCircle,
   Clock,
+  LogIn,
 } from "lucide-react";
 import Loader from "@/components/added-components/loader";
 import useFetchEventDetails from "@/utils/useFetchEventDetails";
@@ -327,7 +328,20 @@ export default function EventPage() {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          {!verceraPaymentStatus ? (
+          {!userInfo ? (
+            <div className="w-full">
+              <Button
+                className="w-full mb-2"
+                onClick={() => router.push("/login")}
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Login to Register
+              </Button>
+              <p className="text-sm text-center text-muted-foreground">
+                You need to login first to register for events.
+              </p>
+            </div>
+          ) : !verceraPaymentStatus ? (
             <div className="w-full">
               <Button className="w-full mb-2" disabled>
                 <AlertCircle className="mr-2 h-4 w-4" />
