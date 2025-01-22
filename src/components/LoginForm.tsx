@@ -114,9 +114,6 @@ export default function LoginForm() {
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>
-        {/* {authError && (
-          <p className="text-sm text-red-500 text-center">{authError}</p>
-        )} */}
         {authError && (
           <div
             className={`p-4 mb-4 text-white rounded ${

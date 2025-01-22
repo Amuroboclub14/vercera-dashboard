@@ -22,6 +22,7 @@ import {
   AlertCircle,
   Clock,
   LogIn,
+  Loader2,
 } from "lucide-react";
 import Loader from "@/components/added-components/loader";
 import useFetchEventDetails from "@/utils/useFetchEventDetails";
@@ -29,6 +30,7 @@ import UserContext from "@/utils/UserContext"; // Import UserContext
 import Image from "next/image";
 import pb from "@/lib/pocketbase"; // PocketBase instance
 import Link from "next/link";
+import { Icons } from "@/components/ui/icons";
 
 // Function to generate short team code
 const generateTeamCode = () => {
@@ -50,6 +52,7 @@ export default function EventPage() {
   const router = useRouter();
   const { event, loading, error } = useFetchEventDetails(params.id);
   const { userInfo } = useContext(UserContext);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const [showRegistration, setShowRegistration] = useState(false);
   const [teamName, setTeamName] = useState("");
@@ -169,6 +172,8 @@ export default function EventPage() {
     if (showRegistration) return;
 
     try {
+      // setIsLoading(true);
+
       const existingRegistration = await pb
         .collection("eventRegistrations")
         .getFirstListItem(
@@ -459,6 +464,9 @@ export default function EventPage() {
                     team.length > (event?.teamSize || 1) // Max team size check
                   }
                 >
+                  {isRegistering && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   {isRegistering ? "Registering..." : "Register"}
                 </Button>
               </form>
