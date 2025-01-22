@@ -188,7 +188,7 @@ export default function EventPage() {
           const route =
             event.eventCategory === "gaming"
               ? `/events/${event.id}/payment`
-              : `/events/${event.id}/bundle-payment`;
+              : `/events/${event.id}/payment`;
           router.push(route);
           return;
         }
@@ -204,7 +204,7 @@ export default function EventPage() {
         const route =
           event.eventCategory === "gaming"
             ? `/events/${event.id}/payment`
-            : `/events/${event.id}/bundle-payment`;
+            : `/events/${event.id}/payment`;
         router.push(route);
         return;
       }
