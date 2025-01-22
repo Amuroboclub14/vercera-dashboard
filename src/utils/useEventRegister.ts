@@ -5,7 +5,9 @@ import UserContext from "@/utils/UserContext";
 
 export default function useFetchEvents() {
   const [registrationLoading, setRegistrationLoading] = useState(false);
-  const [registrationError, setRegistrationError] = useState<string | null>(null);
+  const [registrationError, setRegistrationError] = useState<string | null>(
+    null
+  );
   const { userInfo } = useContext(UserContext);
 
   const handleEventRegistration = async (eventId: string) => {
@@ -18,7 +20,9 @@ export default function useFetchEvents() {
     try {
       const existingRegistration = await pb
         .collection("event_registrations")
-        .getFullList({filter: `user="${userInfo?.id}" && event="${eventId}"`});
+        .getFullList({
+          filter: `user="${userInfo?.id}" && event="${eventId}"`,
+        });
       console.log(existingRegistration);
       if (existingRegistration.length > 0) {
         setRegistrationError("You have already registered for this event.");

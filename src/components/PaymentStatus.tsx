@@ -22,17 +22,12 @@ export default function PaymentStatus() {
     router.push("/payment");
   };
 
-  // if (loading) {
-  //   return <div>Loading payment status...</div>;
-  // }
-
   if (error) {
     return <div className="text-red-500">{error}</div>;
   }
 
   if (!paymentDetails) {
     return;
-    // return <div>No payment details available.</div>;
   }
 
   const { paymentStatus, amount, verceraId, qrCode, paymentScreenshot } =
