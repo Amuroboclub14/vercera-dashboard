@@ -6,7 +6,7 @@ type EventDetail = {
   id: string;
   name: string;
   description: string;
-  date: string;
+  date: Date;
   time: string;
   image: string;
   teamSize: number;

@@ -4,7 +4,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ["amuroboclub.pockethost.io"],
+    remotePatterns: [{ hostname: "amuroboclub.pockethost.io" }],
   },
   typescript: {
     ignoreBuildErrors: true,

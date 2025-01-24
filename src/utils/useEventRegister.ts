@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import pb from "@/lib/pocketbase";
 import { useContext } from "react";
 import UserContext from "@/utils/UserContext";

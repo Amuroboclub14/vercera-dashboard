@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,10 +24,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Icons } from "@/components/ui/icons";
-
 import useCreateUser from "@/utils/useRegister.js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import UserContext  from "@/utils/UserContext";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -50,14 +50,10 @@ const registerSchema = z.object({
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
-  const [registrationResult, setRegistrationResult] = useState<{
-    verceraId: string;
-    qrCode: string;
-  } | null>(null);
 
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const { createUser, username, isLoading } = useCreateUser();
-  const router = useRouter();
+  const { createUser, isLoading } = useCreateUser();
+  const {loggedinUser, updateLoggedinUser} = useContext(UserContext);
 
   const {
     register,
@@ -68,6 +64,7 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
+  const router = useRouter();
   const onSubmit = async (data: RegisterFormData) => {
     try {
       const result = await createUser(
@@ -83,19 +80,18 @@ export default function RegisterForm() {
         data.isAMURoboclubMember
       );
 
-      setRegistrationResult(result);
       setStatusMessage(
         "Registration successful! Redirecting to the dashboard..."
       );
+      updateLoggedinUser();
+      router.push("/");
 
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
     } catch (error) {
       console.error("Registration error:", error);
       setStatusMessage("Registration failed. Please try again.");
     }
   };
+
 
   return (
     <>
