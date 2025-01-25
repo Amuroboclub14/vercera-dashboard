@@ -32,7 +32,7 @@ import UserContext  from "@/utils/UserContext";
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
   enrollmentNumber: z
     .string()
     .max(6, "Enrollment number must be valid")
@@ -52,7 +52,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterForm() {
 
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const { createUser, isLoading } = useCreateUser();
+  const { createUser, error, isLoading } = useCreateUser();
   const {loggedinUser, updateLoggedinUser} = useContext(UserContext);
 
   const {
@@ -86,9 +86,8 @@ export default function RegisterForm() {
       updateLoggedinUser();
       router.push("/");
 
-    } catch (error) {
-      console.error("Registration error:", error);
-      setStatusMessage("Registration failed. Please try again.");
+    } catch (err) {
+      setStatusMessage(error);
     }
   };
 

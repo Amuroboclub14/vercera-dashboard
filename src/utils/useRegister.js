@@ -6,7 +6,7 @@ import UserContext from "../utils/UserContext.jsx";
 
 export default function useCreateUser() {
   const [isLoading, setIsLoading] = useState(false);
-
+  const [error, setError] = useState(null);
   const {setLoggedinUser} = useContext(UserContext);
 
   // Function to generate unique VarceraId
@@ -78,12 +78,14 @@ export default function useCreateUser() {
 
       return { verceraId, qrCode };
     } catch (error) {
-      console.log(error);
+      // console.log(Object.keys(error.response.data)[0]);
+      // console.log(error.response.data[Object.keys(error.response.data)[0]].message);
+      setError(`${Object.keys(error.response.data)[0]}: ${error.response.data[Object.keys(error.response.data)[0]].message}`);
       throw error;
     } finally {
       setIsLoading(false);
     }
   }
 
-  return { createUser, isLoading };
+  return { createUser, error, isLoading };
 }
