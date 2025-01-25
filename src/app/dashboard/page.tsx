@@ -59,7 +59,7 @@ export default function DashboardPage() {
               <p className="text-sm text-muted-foreground">
                 Complete your registration today!
               </p>
-              <Link href="/register">
+              <Link href="https://forms.gle/1TspMJNuYJGYY5467">
                 <Button className="w-full">Register Now</Button>
               </Link>
             </div>
