@@ -79,7 +79,11 @@ export default function RegisterForm() {
         data.yearOfStudy,
         data.isAMURoboclubMember
       );
-
+      
+      if(Object.keys(result)[0] !== "verceraId"){
+        setStatusMessage(`${Object.keys(result.response.data)[0]}: ${result.response.data[Object.keys(result.response.data)[0]].message}`);
+        return;
+      }
       setStatusMessage(
         "Registration successful! Redirecting to the dashboard..."
       );
@@ -87,7 +91,7 @@ export default function RegisterForm() {
       router.push("/");
 
     } catch (err) {
-      setStatusMessage(error);
+      console.error(err);
     }
   };
 

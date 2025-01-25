@@ -81,7 +81,7 @@ export default function useCreateUser() {
       // console.log(Object.keys(error.response.data)[0]);
       // console.log(error.response.data[Object.keys(error.response.data)[0]].message);
       setError(`${Object.keys(error.response.data)[0]}: ${error.response.data[Object.keys(error.response.data)[0]].message}`);
-      throw error;
+      return error;
     } finally {
       setIsLoading(false);
     }
