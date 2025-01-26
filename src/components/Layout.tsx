@@ -18,17 +18,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const menuItems = [
     { label: "Dashboard", href: "/" },
-    loggedinUser
-      ? { label: "Registered Events", href: "/registered-events" }
-      : null,
+    // loggedinUser
+    //   ? { label: "Registered Events", href: "/registered-events" }
+    //   : null,
     { label: "Contact Us", href: "/contact" },
+    // {
+    //   label: loggedinUser ? loggedinUser : "Login",
+    //   href: loggedinUser ? "/profile" : "/login",
+    // },
+    // loggedinUser
+    //   ? null
+    //   : { label: "Register for Vercera 4.0", href: "/register" },
     {
-      label: loggedinUser ? loggedinUser : "Login",
-      href: loggedinUser ? "/profile" : "/login",
+      label: "Register for Vercera 4.0",
+      href: "https://forms.gle/1TspMJNuYJGYY5467",
     },
-    loggedinUser
-      ? null
-      : { label: "Register for Vercera 4.0", href: "/register" },
+    {
+      label: "Register for Gaming Events",
+      href: "https://forms.gle/PNJ8Mh96wieAt33m8",
+    },
   ].filter(Boolean);
 
   return (
@@ -50,6 +58,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
+                target="_blank"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   pathname === item.href
                     ? "text-primary"
@@ -76,6 +85,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    target="_blank"
                     className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                     onClick={() => setIsOpen(false)}
                   >

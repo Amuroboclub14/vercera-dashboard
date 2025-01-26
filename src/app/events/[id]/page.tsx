@@ -30,7 +30,6 @@ import UserContext from "@/utils/UserContext"; // Import UserContext
 import Image from "next/image";
 import pb from "@/lib/pocketbase"; // PocketBase instance
 import Link from "next/link";
-import { Icons } from "@/components/ui/icons";
 
 // Function to generate short team code
 const generateTeamCode = () => {
@@ -193,8 +192,10 @@ export default function EventPage() {
         if (!hasValidPayment) {
           const route =
             event.eventCategory === "gaming"
-              ? `/events/${event.id}/payment`
-              : `/events/${event.id}/payment`;
+              ? // ? `/events/${event.id}/payment`
+                "https://forms.gle/PNJ8Mh96wieAt33m8"
+              : // : `/events/${event.id}/payment`;
+                "https://forms.gle/PNJ8Mh96wieAt33m8";
           router.push(route);
           return;
         }
@@ -209,8 +210,10 @@ export default function EventPage() {
       ) {
         const route =
           event.eventCategory === "gaming"
-            ? `/events/${event.id}/payment`
-            : `/events/${event.id}/payment`;
+            ? // ? `/events/${event.id}/payment`
+              "https://forms.gle/PNJ8Mh96wieAt33m8"
+            : // : `/events/${event.id}/payment`;
+              "https://forms.gle/PNJ8Mh96wieAt33m8";
         router.push(route);
         return;
       }
@@ -337,10 +340,20 @@ export default function EventPage() {
             <div className="w-full">
               <Button
                 className="w-full mb-2"
-                onClick={() => router.push("/login")}
+                onClick={() => {
+                  if (
+                    event?.eventCategory == "gaming" ||
+                    event?.eventCategory == "bundle"
+                  ) {
+                    router.push("https://forms.gle/PNJ8Mh96wieAt33m8");
+                  } else {
+                    router.push("https://forms.gle/1TspMJNuYJGYY5467");
+                  }
+                }}
               >
                 <LogIn className="mr-2 h-4 w-4" />
-                Login to Register
+                Register Now
+                {/* Login to Register */}
               </Button>
               <p className="text-sm text-center text-muted-foreground">
                 You need to login first to register for events.
