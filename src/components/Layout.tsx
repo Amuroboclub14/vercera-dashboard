@@ -58,7 +58,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                target="_blank"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   pathname === item.href
                     ? "text-primary"
@@ -85,7 +84,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    target="_blank"
                     className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                     onClick={() => setIsOpen(false)}
                   >

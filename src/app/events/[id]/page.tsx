@@ -71,11 +71,13 @@ export default function EventPage() {
       const user = await pb
         .collection("users")
         .getFirstListItem(`verceraId="${userInfo.verceraId}"`);
-      setVerceraPaymentStatus(user.paymentStatus || false);
+      setVerceraPaymentStatus(user.paymentStatus || true);
+      // setVerceraPaymentStatus(user.paymentStatus || false);
       setPaymentUnderReview(!!user.paymentScreenshot && !user.paymentStatus);
     } catch (error) {
       console.error("Error checking Vercera payment status:", error);
-      setVerceraPaymentStatus(false);
+      // setVerceraPaymentStatus(false);
+      setVerceraPaymentStatus(true);
     } finally {
       setIsLoadingPaymentStatus(false);
     }
@@ -361,7 +363,15 @@ export default function EventPage() {
             </div>
           ) : !verceraPaymentStatus ? (
             <div className="w-full">
-              <Button className="w-full mb-2" disabled>
+              <Button className="w-full mb-2">
+                <Link
+                  href={
+                    event?.eventCategory === "gaming" ||
+                    event?.eventCategory === "bundle"
+                      ? "https://forms.gle/PNJ8Mh96wieAt33m8"
+                      : "https://forms.gle/1TspMJNuYJGYY5467"
+                  }
+                ></Link>
                 <AlertCircle className="mr-2 h-4 w-4" />
                 Register for Event
               </Button>
@@ -384,11 +394,20 @@ export default function EventPage() {
             </div>
           ) : (
             !showRegistration && (
-              <Button onClick={handleRegister} className="w-full">
-                {(event?.eventCategory === "gaming" ||
-                  event?.eventCategory === "bundle") &&
-                !hasValidPayment
-                  ? "Proceed to Payment"
+              <Button
+                onClick={() => {
+                  const route =
+                    event?.eventCategory === "gaming" ||
+                    event?.eventCategory === "bundle"
+                      ? "https://forms.gle/PNJ8Mh96wieAt33m8"
+                      : "https://forms.gle/1TspMJNuYJGYY5467";
+                  router.push(route);
+                }}
+                className="w-full"
+              >
+                {event?.eventCategory === "gaming" ||
+                event?.eventCategory === "bundle"
+                  ? "Register for Gaming Event"
                   : "Register for Event"}
               </Button>
             )
