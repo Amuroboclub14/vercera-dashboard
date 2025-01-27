@@ -31,9 +31,10 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col space-y-8">
       {/* Banner Image */}
-      <div className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden">
+      <div className="relative w-full h-64 object-top sm:h-80 lg:h-96 overflow-hidden">
         <Image
-          src="/vercera-logo-wide.png" // Update this path to your image
+          src="/vercera-softential-logo-wide.png" // Update this path to your image
+          // src="/vercera-logo-wide.png" // Update this path to your image
           alt="Vercera-Banner"
           layout="fill"
           objectFit="contain" // Ensures the whole image is visible
