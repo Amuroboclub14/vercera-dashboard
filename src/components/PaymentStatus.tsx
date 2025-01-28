@@ -75,7 +75,6 @@ export default function PaymentStatus() {
             <>
               <div className="flex flex-row space-x-4 justify-between">
                 <Button className="w-full">
-                  {" "}
                   <Link href={"https://forms.gle/1TspMJNuYJGYY5467"}>
                     Register for Vercera 4.0
                   </Link>
