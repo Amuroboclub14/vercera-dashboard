@@ -61,21 +61,17 @@ export default function DashboardPage() {
                 <p className="text-sm text-muted-foreground">
                   Complete your registration today!
                 </p>
-                <div className="flex flex-row space-x-4 justify-between">
-                  <Link
-                    href="https://forms.gle/1TspMJNuYJGYY5467"
-                    className="w-full"
-                  >
-                    <Button className="w-full">Register for Vercera 4.0</Button>
-                  </Link>
-                  <Link
-                    href="https://forms.gle/PNJ8Mh96wieAt33m8"
-                    className="w-full"
-                  >
-                    <Button className="w-full">
+                <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-4 justify-between">
+                  <Button className="w-full">
+                    <Link href={"https://forms.gle/1TspMJNuYJGYY5467"}>
+                      Register for Vercera 4.0
+                    </Link>
+                  </Button>
+                  <Button className="w-full">
+                    <Link href={"https://forms.gle/PNJ8Mh96wieAt33m8"}>
                       Register for Gaming Events
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </CardContent>
