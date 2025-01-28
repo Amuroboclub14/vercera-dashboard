@@ -37,6 +37,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       label: "Register for Gaming Events",
       href: "https://forms.gle/PNJ8Mh96wieAt33m8",
     },
+    {
+      label: "Registeration for Schools",
+      href: "https://forms.gle/iZ62DZuVeHKXPuth7",
+    },
   ].filter(Boolean);
 
   return (

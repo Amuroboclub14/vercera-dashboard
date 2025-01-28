@@ -61,15 +61,24 @@ export default function DashboardPage() {
                 <p className="text-sm text-muted-foreground">
                   Complete your registration today!
                 </p>
+                <Button className="w-full py-8 text-lg font-bold">
+                  <Link href={"https://forms.gle/1TspMJNuYJGYY5467"}>
+                    REGISTER FOR VERCERA 4.0 <br />
+                    <span className="text-sm font-normal">
+                      (all events, including Gaming Events)
+                    </span>
+                  </Link>
+                </Button>
                 <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-4 justify-between">
                   <Button className="w-full">
-                    <Link href={"https://forms.gle/1TspMJNuYJGYY5467"}>
-                      Register for Vercera 4.0
+                    <Link href={"https://forms.gle/PNJ8Mh96wieAt33m8"}>
+                      Register for Gaming Events{" "}
+                      <span className="text-sm font-normal">(only)</span>
                     </Link>
                   </Button>
                   <Button className="w-full">
-                    <Link href={"https://forms.gle/PNJ8Mh96wieAt33m8"}>
-                      Register for Gaming Events
+                    <Link href={"https://forms.gle/iZ62DZuVeHKXPuth7"}>
+                      Registeration for Schools
                     </Link>
                   </Button>
                 </div>
