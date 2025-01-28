@@ -33,7 +33,7 @@ export default function DashboardPage() {
       {/* Banner Image */}
       <div className="relative w-full h-64 object-top sm:h-80 lg:h-96 overflow-hidden">
         <Image
-          src="/vercera-softential-logo-wide.png" // Update this path to your image
+          src="/vercera-website-header.png" // Update this path to your image
           // src="/vercera-logo-wide.png" // Update this path to your image
           alt="Vercera-Banner"
           layout="fill"
@@ -45,31 +45,47 @@ export default function DashboardPage() {
 
       {/* Register Box for Unauthenticated Users */}
       {!isLoading && !userId && (
-        <Card className="">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <span>Register for Vercera 4.0</span>
-            </CardTitle>
-            <CardDescription>
-              Join us for an exciting experience! Register now to secure your
-              spot.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Complete your registration today!
-              </p>
-              <Link href="https://forms.gle/1TspMJNuYJGYY5467">
-                <Button className="w-full">Register Now</Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+        <>
+          <Card className="">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <span>Register for Vercera 4.0</span>
+              </CardTitle>
+              <CardDescription>
+                Join us for an exciting experience! Register now to secure your
+                spot.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Complete your registration today!
+                </p>
+                <div className="flex flex-row space-x-4 justify-between">
+                  <Link
+                    href="https://forms.gle/1TspMJNuYJGYY5467"
+                    className="w-full"
+                  >
+                    <Button className="w-full">Register for Vercera 4.0</Button>
+                  </Link>
+                  <Link
+                    href="https://forms.gle/PNJ8Mh96wieAt33m8"
+                    className="w-full"
+                  >
+                    <Button className="w-full">
+                      Register for Gaming Events
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </>
       )}
 
       {/* Payment Status and Event List */}
-      <PaymentStatus userId={userId || "guest"} />
+      {/* <PaymentStatus userId={userId || "guest"} /> */}
+      <PaymentStatus />
       <EventList />
     </div>
   );
